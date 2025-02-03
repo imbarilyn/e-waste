@@ -5,7 +5,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="h-full w-full grid grid-cols-12 md:bg-white">
+  <div class="h-full w-full grid grid-cols-12 bg-main-300 md:bg-white">
 
     <div
         class="bg-main-300  md:rounded-tr-2xl md:rounded-br-2xl  md:h-screen flex  items-center md:justify-center md:col-span-6 col-span-12">
@@ -21,11 +21,11 @@ const router = useRouter()
           <span>Do you have an account?</span>
           <router-link
               class="text-sm ps-2 text-white decoration-2 underline font-medium"
-              to="/auth/register">Create account?
+              to="/admin/register">Create account?
           </router-link>
         </div>
       </div>
-      <div class="md:hidden flex items-center  justify-start text-white ps-4">
+      <div class="md:hidden flex items-center py-4  justify-start text-white ps-4">
         <div class="flex items-center justify-center btn btn-sm btn-ghost btn-circle" @click="router.go(-1)">
           <span class="material-icons-outlined cursor-pointer">chevron_left</span>
         </div>
@@ -71,7 +71,7 @@ const router = useRouter()
                       <label class="label font-semibold text-main-800" for="email">Password</label>
                       <router-link
                           class="text-sm text-main-500 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                          to="/auth/forgot-password">Forgot password?
+                          to="/admin/forgot-password">Forgot password?
                       </router-link>
                     </div>
                     <div>
@@ -96,7 +96,7 @@ const router = useRouter()
                     <span>Do you have an account?</span>
                     <router-link
                         class="text-sm ps-2 decoration-2 text-main-500 underline font-medium"
-                        to="/auth/register">Create account
+                        to="/admin/register">Create account
                     </router-link>
                   </div>
                 </div>
