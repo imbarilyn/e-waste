@@ -5,16 +5,16 @@ import NotificationBanner from "@/components/notifications/NotificationBanner.vu
 
 <template>
 
-    <div class="bg-main-300 h-screen">
+
       <RouterView #default="{Component, route}">
-        <Transition name="slide-in" mode="out-in" appear>
+        <Transition name="page" mode="out-in" appear>
           <template v-if="Component">
             <component :is="Component" :key="route.fullPath" />
           </template>
         </Transition>
 
       </RouterView>
-    </div>
+
 
 
 
@@ -24,17 +24,18 @@ import NotificationBanner from "@/components/notifications/NotificationBanner.vu
 
 <style scoped>
 
-.page-slide-enter-active, .page-slide-enter-active {
-  transition: all 0.35s ease-out;
-}
-.page-slide-enter-from {
-  opacity: 0;
-  transform: translateY(50%);
-}
-.page-slide-leave-to{
+.page-enter-from {
   opacity: 0;
   transform: translateY(50%);
 }
 
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(50%)
+}
+
+.page-enter-active, .page-leave-active {
+  transition: all 0.35s ease-out;
+}
 
 </style>
