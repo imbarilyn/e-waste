@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory, type RouteLocationNormalized} from 'vue-router'
 
 
 const router = createRouter({
@@ -7,10 +7,10 @@ const router = createRouter({
     {
       name: 'Home',
       path: '/',
-      redirect: '/auth'
+      redirect: '/admin'
     },
     {
-      name: 'auth',
+      name: 'admin',
       path: '/admin',
       component: ()=>import('@/views/auth/admin/AdminAuth.vue'),
       children: [
@@ -18,6 +18,9 @@ const router = createRouter({
           name: 'login',
           path: '',
             component: ()=>import('@/views/auth/admin/LoginPage.vue'),
+          meta: {
+            requiresAuth: false,
+          }
         },
         {
           name: 'register',
@@ -51,6 +54,76 @@ const router = createRouter({
             requiresAuth: true,
           }
         }
+
+      ]
+    },
+    {
+      name: 'aggregator',
+      path: '/aggregator',
+      component: ()=>import('@/views/auth/aggregator/AggregatorPage.vue'),
+      children: [
+        {
+          name: 'aggregator-login',
+          path: '',
+          component: ()=>import('@/views/auth/aggregator/LoginPage.vue'),
+        },
+        {
+          name: 'reset-password',
+          path: 'reset-password',
+          component: ()=>import('@/views/auth/aggregator/ResetPasswordPage.vue'),
+        },
+        {
+          name: 'forgot-password',
+          path: 'forgot-password',
+          component: ()=>import('@/views/auth/aggregator/ForgotPasswordPage.vue'),
+        },
+        {
+          name: 'dashboard',
+          path: '/dashboard',
+          component: ()=>import('@/views/pages/aggregator/DashboardPage.vue'),
+          children: [
+            {
+              name: 'Overview',
+              path: '',
+              component: ()=>import('@/components/aggregator/OverviewPage.vue'),
+              props: (route: RouteLocationNormalized)=>{
+                return {
+                  user_id: route.params.user_id
+                }
+              }
+            },
+            {
+              name: 'Analytics',
+              path: 'analytics',
+              component: ()=>import('@/components/aggregator/AnalyticsPage.vue'),
+              props: (route: RouteLocationNormalized)=>{
+                return {
+                  user_id: route.params.user_id
+                }
+              }
+            },
+            {
+              name: 'Products',
+              path: 'products',
+              component: ()=>import('@/components/aggregator/InventoryPage.vue'),
+              props: (route: RouteLocationNormalized)=>{
+                return {
+                  user_id: route.params.user_id
+                }
+              }
+            },
+            {
+              name: 'Account Receivables',
+              path: 'accounts',
+              component: ()=>import('@/components/aggregator/AccountsPage.vue'),
+              props: (route: RouteLocationNormalized)=>{
+                return {
+                  user_id: route.params.user_id
+                }
+              }
+            }
+          ]
+        },
 
       ]
     }
