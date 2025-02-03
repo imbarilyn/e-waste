@@ -7,7 +7,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="h-full w-full grid grid-cols-12 md:bg-white">
+  <div class="h-full  w-full grid grid-cols-12 bg-main-300 md:bg-white">
 
     <div
         class="bg-main-300 sticky top-0    md:rounded-tr-2xl md:rounded-br-2xl  md:h-screen flex  items-center md:justify-center md:col-span-6 col-span-12">
@@ -88,7 +88,7 @@ const router = useRouter()
                     <span>Remember your password?</span>
                     <router-link
                         class="text-sm ps-2 decoration-2 text-main-500 underline font-medium"
-                        to="/auth">Login
+                        to="/admin">Login
                     </router-link>
                   </div>
                 </div>
