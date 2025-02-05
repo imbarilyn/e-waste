@@ -1,0 +1,101 @@
+<script setup lang="ts">
+import { ref, onMounted, Ref } from 'vue'
+import { Chart } from 'chart.js/auto'
+
+// interface Data {
+//   label
+// }
+const barGraphRef = ref(null)
+const barGraphInstance: Ref<Chart<'bar', number[], string> | null> = ref(null)
+
+const barGraphData = ref({
+  labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+  datasets: [
+        {
+          label: 'Phone',
+          data: [12, 19, 3, 5],
+          backgroundColor: 'rgba(184, 255, 53, 0.6)',
+          // borderColor: 'rgba(75, 192, 192, 1)',
+          // borderWidth: 1,
+          barThickness: 20,
+          borderRadius: 6
+        },
+        {
+          label: 'Computer',
+          data: [2, 3, 20, 5],
+          backgroundColor: 'rgba(5, 155, 255, 0.6)',
+          // borderColor: 'rgba(255, 99, 132, 1)',
+          // borderWidth: 1,
+          barThickness: 20,
+          borderRadius: 6
+
+        },
+        {
+          label: 'Other',
+          data: [3, 10, 13, 15],
+          backgroundColor: 'rgba(255, 197, 52, 0.6)',
+          // borderColor: 'rgba(54, 162, 235, 1)',
+          // borderWidth: 1,
+          barThickness: 20,
+          borderRadius: 6
+        }
+  ]
+})
+
+const renderChart = async ()=>{
+  if(barGraphInstance.value) {
+    barGraphInstance.value.destroy()
+  }
+  else{
+    if(barGraphRef.value){
+      barGraphInstance.value = new Chart(barGraphRef.value as HTMLCanvasElement, {
+        type: 'bar',
+        data: barGraphData.value,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom',
+              labels: {
+                usePointStyle: true,
+                pointStyle: 'circle',
+                padding: 30,
+              },
+            },
+          },
+          layout: {
+            padding: {
+              top: 0,
+              right: 10,
+            },
+          },
+
+        }
+      })
+    }
+  }
+}
+
+
+onMounted(()=>{
+  renderChart()
+})
+
+
+</script>
+
+<template>
+  <div>
+    <p class="md:text-2xl text-lg font-semibold">Material type</p>
+    <div class="h-96">
+      <canvas ref="barGraphRef"></canvas>
+    </div>
+  </div>
+
+</template>
+
+<style scoped>
+
+</style>
