@@ -79,13 +79,13 @@ const router = createRouter({
         },
         {
           name: 'dashboard',
-          path: '/dashboard',
-          component: ()=>import('@/views/pages/aggregator/DashboardPage.vue'),
+          path: 'dashboard',
+          component: ()=>import('@/views/pages/aggregator/LayoutPage.vue'),
           children: [
             {
               name: 'Overview',
               path: '',
-              component: ()=>import('@/components/aggregator/OverviewPage.vue'),
+              component: ()=>import('@/components/aggregator/overview/OverviewPage.vue'),
               props: (route: RouteLocationNormalized)=>{
                 return {
                   user_id: route.params.user_id
@@ -95,7 +95,7 @@ const router = createRouter({
             {
               name: 'Analytics',
               path: 'analytics',
-              component: ()=>import('@/components/aggregator/AnalyticsPage.vue'),
+              component: ()=>import('@/components/aggregator/analytics/AnalyticsPage.vue'),
               props: (route: RouteLocationNormalized)=>{
                 return {
                   user_id: route.params.user_id
@@ -103,9 +103,9 @@ const router = createRouter({
               }
             },
             {
-              name: 'Products',
-              path: 'products',
-              component: ()=>import('@/components/aggregator/InventoryPage.vue'),
+              name: 'Inventory',
+              path: 'inventory',
+              component: ()=>import('@/components/aggregator/inventory/InventoryPage.vue'),
               props: (route: RouteLocationNormalized)=>{
                 return {
                   user_id: route.params.user_id
