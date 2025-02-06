@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import InventoryDataTable from "@/components/aggregator/InventoryDataTable.vue";
+import InventoryDataTable from "@/components/aggregator/inventory/InventoryDataTable.vue";
 import {useRouter} from "vue-router";
-import {useTabStore} from "@/stores/tabstore.ts";
+import {useTabStore} from "@/stores/aggregatorTabstore.ts";
 
 const router = useRouter()
 const tabStore = useTabStore()
