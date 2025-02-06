@@ -22,7 +22,7 @@ const router = useRouter()
           <span>Do you have an account already?</span>
           <router-link
               class="text-sm ps-2 text-white decoration-2 underline font-medium"
-              to="/admin">Login
+              to="/auth">Login
           </router-link>
         </div>
       </div>
@@ -119,7 +119,7 @@ const router = useRouter()
                     <span class="text-lg">Remember your password?</span>
                     <router-link
                         class="text-sm ps-2 text-main-500 decoration-2 underline font-medium"
-                        to="/admin">Login
+                        to="/auth">Login
                     </router-link>
                   </div>
                 </div>
