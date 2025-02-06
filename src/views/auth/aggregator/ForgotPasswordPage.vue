@@ -18,7 +18,7 @@ const router = useRouter()
             <span class="text-lg">Remember your password?</span>
             <router-link
                 class="text-sm ps-2 text-white decoration-2 underline font-medium"
-                to="/aggregator">Login
+                to="/auth/aggregator-login">Login
             </router-link>
           </div>
         </div>
@@ -52,9 +52,10 @@ const router = useRouter()
                       <span>Remember your password?</span>
                       <router-link
                           class="text-sm ps-2  text-main-500 decoration-2 underline font-medium"
-                          to="/aggregator">Login
+                          to="/auth/aggregator-login">Login
                       </router-link>
                     </div>
+
 
 
                   </div>
@@ -88,7 +89,7 @@ const router = useRouter()
                     <span>Remember your password?</span>
                     <router-link
                         class="text-sm ps-2 decoration-2 text-main-500 underline font-medium"
-                        to="/aggregator">Login
+                        to="/auth/aggregator-login">Login
                     </router-link>
                   </div>
                 </div>
