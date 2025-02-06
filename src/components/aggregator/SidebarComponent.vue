@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from '@headlessui/vue'
-import {useTabStore} from "@/stores/tabstore.ts";
+import {useTabStore} from "@/stores/aggregatorTabstore.ts";
 import {useRouter} from "vue-router";
-import {useAggregatorStore} from "@/stores/aggregatorStore.ts";
+import {useAdminStore} from "@/stores/aggregatorStore.ts";
 
 const tabStore = useTabStore()
 const router = useRouter()
-const aggregatorStore = useAggregatorStore()
+const aggregatorStore = useAdminStore()
 
 
 const props = defineProps<{
@@ -34,15 +34,15 @@ const handleTab = (tab: string) => {
       <div v-for="(tab, index) in tabStore.getTabs"
            :key="index"
            class="px-4 pt-5 sm:px-6 cursor-pointer"
-           @click.stop="handleTab(tab.name)">
+           @click.stop="handleTab(tab.value)">
         <div class="pt-3 py-2  px-2 flex justify-start gap-2 items-center rounded-lg"
-             :class="[tabStore.activeTab === tab.name? 'bg-main-200 transition duration-500 ease-in-out': 'hover-tab']">
+             :class="[tabStore.activeTab === tab.value? 'bg-main-200 transition duration-500 ease-in-out': 'hover-tab']">
                       <span class="material-icons-round"
-                            :class="[tabStore.activeTab === tab.name? 'text-main-500': 'text-slate-400']">{{
+                            :class="[tabStore.activeTab === tab.value? 'text-main-500': 'text-slate-400']">{{
                           tab.icon
                         }}</span>
           <span
-              :class="[tabStore.activeTab === tab.name? 'text-main-500': 'text-black']">{{ tab.name }}</span>
+              :class="[tabStore.activeTab === tab.value? 'text-main-500': 'text-main-950']">{{ tab.name }}</span>
         </div>
       </div>
       <!--                  profile-->
@@ -93,15 +93,15 @@ const handleTab = (tab: string) => {
                     <div v-for="(tab, index) in tabStore.getTabs"
                          :key="index"
                          class="px-4 pt-5 sm:px-6 md:!text-lg !text-sm cursor-pointer"
-                         @click="handleTab(tab.name)">
+                         @click="handleTab(tab.value)">
                       <div class="md:py-2 py-1.5  px-2 flex justify-start gap-2 items-center rounded-lg"
-                           :class="[tabStore.activeTab === tab.name? 'bg-main-200 transition duration-500 ease-in-out': 'hover-tab']">
+                           :class="[tabStore.activeTab === tab.value? 'bg-main-200 transition duration-500 ease-in-out': 'hover-tab']">
                         <span class="material-icons-round"
-                              :class="[tabStore.activeTab === tab.name? 'text-main-500': 'text-slate-400']">{{
+                              :class="[tabStore.activeTab === tab.value? 'text-main-500': 'text-slate-400']">{{
                             tab.icon
                           }}</span>
                         <span
-                            :class="[tabStore.activeTab === tab.name? 'text-main-500': 'text-black']">{{
+                            :class="[tabStore.activeTab === tab.value? 'text-main-500': 'text-main-950']">{{
                             tab.name
                           }}</span>
                       </div>
