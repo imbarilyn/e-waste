@@ -2,7 +2,7 @@ import {defineStore} from 'pinia'
 import {ref} from "vue";
 
 
-export const useAdminStore = defineStore('aggregatorStore', () => {
+export const useAdminStore = defineStore('adminStore', () => {
     const expandSidebarSmall = ref(false)
     const collapseSidebar = ref(false)
 
