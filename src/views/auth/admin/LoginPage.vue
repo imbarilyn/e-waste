@@ -21,7 +21,7 @@ const router = useRouter()
           <span>Do you have an account?</span>
           <router-link
               class="text-sm ps-2 text-white decoration-2 underline font-medium"
-              to="/admin/register">Create account?
+              to="/auth/admin-register">Create account?
           </router-link>
         </div>
       </div>
@@ -71,7 +71,7 @@ const router = useRouter()
                       <label class="label font-semibold text-main-800" for="email">Password</label>
                       <router-link
                           class="text-sm text-main-500 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                          to="/admin/forgot-password">Forgot password?
+                          to="/auth/admin-forgot-password">Forgot password?
                       </router-link>
                     </div>
                     <div>
@@ -96,7 +96,7 @@ const router = useRouter()
                     <span>Do you have an account?</span>
                     <router-link
                         class="text-sm ps-2 decoration-2 text-main-500 underline font-medium"
-                        to="/admin/register">Create account
+                        to="auth/">Create account
                     </router-link>
                   </div>
                 </div>
