@@ -15,13 +15,6 @@ const router = useRouter()
         <div class="text-white">
           <p class="!text-4xl font-semibold">Reset Password</p>
           <span>Kindly reset your password</span>
-<!--          <div>-->
-<!--            <span class="text-lg">Remember your password?</span>-->
-<!--            <router-link-->
-<!--                class="text-sm ps-2 text-white decoration-2 underline font-medium"-->
-<!--                to="/auth">Login-->
-<!--            </router-link>-->
-<!--          </div>-->
         </div>
         <div class="flex justify-center">
           <img src="/images/e-waste.png" alt="contract-image" class="lg:w-40 w-32 ">
@@ -49,15 +42,6 @@ const router = useRouter()
                 <div class="flex flex-col space-y-5">
                   <div class="flex  flex-col justify-start  md:hidden">
                     <p class="!text-2xl font-semibold text-main-400">Reset Password</p>
-<!--                    <div>-->
-<!--                      <span>Kindly reset your password</span>-->
-<!--                      <router-link-->
-<!--                          class="text-sm ps-2  text-main-500 decoration-2 underline font-medium"-->
-<!--                          to="/auth">Login-->
-<!--                      </router-link>-->
-<!--                    </div>-->
-
-
                   </div>
                   <div class="md:hidden mx-auto block">
                     <div>
