@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import {reactive, watch, ref} from 'vue'
-import { useField } from 'vee-validate'
+import {reactive, watch, ref, computed} from 'vue'
+import {useField} from 'vee-validate'
 import {useAdminStore} from "@/stores/adminStore.ts";
+import {useAggregatorAuthStore} from "@/stores/aggregatorAuthStore.ts";
+import {showAlert} from "@/modules/sweetAlert.ts";
+import ListBox from "@/components/admin/ComboBox.vue";
+import ComboBox from "@/components/admin/ComboBox.vue";
+import {useAdminAuthStore} from "@/stores/adminAuthStore.ts";
 
 const createAggregatorData = reactive({
   fullName: '',
@@ -11,9 +16,21 @@ const createAggregatorData = reactive({
 })
 
 const adminStore = useAdminStore()
+const adminAuthStore = useAdminAuthStore()
+const aggregatorAuthStore = useAggregatorAuthStore()
 const isLoadingResource = ref(false)
 
+const locationArray = [
+  { id: 1, name: 'Kibera' },
+  {id:2, name: 'Kawangware'},
+  {id:3, name: 'Kangemi'},
+  {id:4, name: 'Kasarani'},
+  {id:5, name: 'Kahawa'},
+  {id:6, name: 'Kariobangi'},
+  {id:7, name: 'Kilimani'},
+]
 
+const prompt = 'Select location'
 const emailValidator = (value: string) => {
   if (!value) {
     return 'Email is required'
@@ -44,7 +61,6 @@ watch(
       email.value = value
     }
 )
-
 
 
 const fullNameValidator = (value: string) => {
@@ -103,11 +119,6 @@ const locationValidator = (value: string) => {
   if (!value) {
     return 'Location is required'
   }
-
-  if (value.length > 50) {
-    return 'Location must be less than 50 characters'
-  }
-
   return true
 }
 
@@ -124,22 +135,52 @@ watch(
     }
 )
 
+const handleLocation = (value: string)=>{
+  createAggregatorData.location = value
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const everyThingOk = computed(() => {
+  return (
+      emailMeta.validated && emailMeta.valid &&
+      fullNameMeta.validated && fullNameMeta.valid &&
+      phoneNumberMeta.validated && phoneNumberMeta.valid &&
+      locationMeta.validated && locationMeta.valid
+  )
+})
+const createAggregatorHandler = () => {
+  if (everyThingOk) {
+    isLoadingResource.value = true
+    aggregatorAuthStore.createAggregator({...createAggregatorData, adminId: adminAuthStore.getAdminInfo()?.userId})
+        .then((resp) => {
+          if (resp.result === 'success') {
+            setTimeout(() => {
+              isLoadingResource.value = false
+              showAlert({
+                type: 'success',
+                message: resp.message
+              })
+            }, 2000)
+          } else {
+            setTimeout(() => {
+              isLoadingResource.value = false
+              showAlert({
+                type: 'error',
+                message: resp.message
+              })
+            }, 2000)
+          }
+        })
+        .catch(() => {
+          setTimeout(() => {
+            isLoadingResource.value = false
+            showAlert({
+              type: 'error',
+              message: 'Failed to create aggregator, please try again'
+            })
+          }, 2000)
+        })
+  }
+}
 
 
 </script>
@@ -154,7 +195,7 @@ watch(
       >
         <div class="p-4 sm:p-7">
           <div class="mt-5">
-            <form class="my-4" @submit.prevent="onLoginClick">
+            <form class="my-4" @submit.prevent="createAggregatorHandler">
               <div class="grid gap-y-4">
                 <div class="flex flex-col space-y-1">
                   <label class="label font-semibold text-sm" for="name"> Full name </label>
@@ -225,17 +266,18 @@ watch(
                 </div>
                 <div class="flex flex-col space-y-1">
                   <label class="label font-semibold text-sm" for="location"> Location </label>
-                  <input
-                      id="phone"
-                      v-model="createAggregatorData.location"
-                      :class="{
-                    'input-error': locationMeta.validated && !locationMeta.valid,
-                    'input-primary': locationMeta.validated && locationMeta.valid
-                  }"
-                      class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
-                      placeholder="Password"
-                      type="text"
-                  />
+<!--                  <input-->
+<!--                      id="phone"-->
+<!--                      v-model="createAggregatorData.location"-->
+<!--                      :class="{-->
+<!--                    'input-error': locationMeta.validated && !locationMeta.valid,-->
+<!--                    'input-primary': locationMeta.validated && locationMeta.valid-->
+<!--                  }"-->
+<!--                      class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"-->
+<!--                      placeholder="Password"-->
+<!--                      type="text"-->
+<!--                  />-->
+                  <ComboBox :combo-props="locationArray"  @combo-choice="handleLocation"/>
                   <small
                       v-if="locationMeta.validated && !locationMeta.valid"
                       class="text-sm text-rose-500"
