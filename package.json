@@ -13,16 +13,21 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.1.5",
+    "@vueuse/core": "^12.5.0",
     "chart.js": "^4.4.7",
     "datatables.net-buttons": "^3.1.2",
     "datatables.net-buttons-dt": "^3.1.2",
     "datatables.net-dt": "^2.1.7",
     "datatables.net-responsive-dt": "^3.0.3",
     "datatables.net-select": "^2.1.0",
+    "jwt-decode": "^4.0.0",
+    "moment": "^2.30.1",
     "pinia": "^2.3.1",
+    "sweetalert2": "^11.15.10",
     "vee-validate": "^4.15.0",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "vue-sweetalert2": "^5.0.11"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
@@ -38,6 +43,7 @@
     "tailwindcss": "^3.4.17",
     "typescript": "~5.7.3",
     "vite": "^6.0.11",
+    "vite-plugin-restart": "^0.4.2",
     "vite-plugin-vue-devtools": "^7.7.0",
     "vue-tsc": "^2.2.0"
   }
