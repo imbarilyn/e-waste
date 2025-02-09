@@ -3,10 +3,12 @@ import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from 
 import {useRouter} from "vue-router";
 import { useAdminTabStore } from "@/stores/adminTabStore.ts";
 import { useAdminStore } from "@/stores/adminStore.ts";
+import {useAdminAuthStore} from "@/stores/adminAuthStore.ts";
 
 const adminStore = useAdminStore()
 const router = useRouter()
 const adminTabStore = useAdminTabStore()
+const adminAuthStore = useAdminAuthStore()
 
 
 const props = defineProps<{
@@ -16,7 +18,8 @@ const props = defineProps<{
 const handleTab = (tab: string) => {
   adminTabStore.setActiveTab(tab)
   router.push({
-    name: tab
+    name: tab,
+    params: {userId: adminAuthStore.getAdminInfo()?.userId}
   })
   console.log(adminTabStore.getTabs)
 }
