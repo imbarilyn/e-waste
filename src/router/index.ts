@@ -61,6 +61,11 @@ const router = createRouter({
                     name: 'aggregator-login',
                     path: 'aggregator-login',
                     component: () => import('@/views/auth/aggregator/LoginPage.vue'),
+                    props: (route: RouteLocationNormalized) => {
+                        return {
+                            userId: route.params.userId
+                        }
+                    }
                 },
                 {
                     name: 'aggregator-reset-password',
@@ -86,41 +91,41 @@ const router = createRouter({
                     children: [
                         {
                             name: 'Aggregator-Overview',
-                            path: '',
+                            path: 'overview/:userId',
                             component: () => import('@/components/aggregator/overview/OverviewPage.vue'),
                             props: (route: RouteLocationNormalized) => {
                                 return {
-                                    user_id: route.params.user_id
+                                    userId: route.params.userId
                                 }
                             }
                         },
                         {
                             name: 'Aggregator-Analytics',
-                            path: 'analytics',
+                            path: 'analytics/:userId',
                             component: () => import('@/components/aggregator/analytics/AnalyticsPage.vue'),
                             props: (route: RouteLocationNormalized) => {
                                 return {
-                                    user_id: route.params.user_id
+                                    userId: route.params.userId
                                 }
                             }
                         },
                         {
                             name: 'Aggregator-Inventory',
-                            path: 'inventory',
+                            path: 'inventory/:userId',
                             component: () => import('@/components/aggregator/inventory/InventoryPage.vue'),
                             props: (route: RouteLocationNormalized) => {
                                 return {
-                                    user_id: route.params.user_id
+                                    userId: route.params.userId
                                 }
                             }
                         },
                         {
                             name: 'Aggregator-Account Receivables',
-                            path: 'accounts',
+                            path: 'accounts/:userId',
                             component: () => import('@/components/aggregator/accounts/AccountsPage.vue'),
                             props: (route: RouteLocationNormalized) => {
                                 return {
-                                    user_id: route.params.user_id
+                                    userId: route.params.userId
                                 }
                             }
                         }
@@ -128,57 +133,67 @@ const router = createRouter({
                 },
         // admin routes
         {
-            name: 'admin',
+            name: 'Admin',
             path: '/admin',
             component: () => import('@/views/pages/admin/LayoutPage.vue'),
             children: [
                 {
                     name: 'Admin-Overview',
-                    path: '',
+                    path: 'overview/:userId',
                     component: () => import('@/components/admin/overview/OverviewPage.vue'),
                     props: (route: RouteLocationNormalized) => {
                         return {
-                            user_id: route.params.user_id
+                            userId: route.params.user_id
                         }
                     }
                 },
                 {
                     name: 'Admin-Analytics',
-                    path: 'analytics',
+                    path: 'analytics/:userId',
                     component: () => import('@/components/admin/analytics/AnalyticsPage.vue'),
                     props: (route: RouteLocationNormalized) => {
                         return {
-                            user_id: route.params.user_id
+                            userId: route.params.user_id
                         }
                     }
                 },
                 {
                     name: 'Admin-Inventory',
-                    path: 'inventory',
+                    path: 'inventory/:userId',
                     component: () => import('@/components/admin/inventory/InventoryPage.vue'),
                     props: (route: RouteLocationNormalized) => {
                         return {
-                            user_id: route.params.user_id
+                            userId: route.params.user_id
                         }
                     }
                 },
                 {
                     name: 'Admin-Account Receivables',
-                    path: 'accounts',
+                    path: 'accounts/:userId',
                     component: () => import('@/components/admin/accounts/AccountsPage.vue'),
                     props: (route: RouteLocationNormalized) => {
                         return {
-                            user_id: route.params.user_id
+                            userId: route.params.user_id
                         }
                     }
                 },
                 {
                     name: 'Create-Aggregator',
-                    path: 'create-aggregator',
+                    path: 'create-aggregator/:userId',
                     component: ()=> import('@/components/admin/CreateAggregatorPage.vue'),
                     props: (route: RouteLocationNormalized) => {
                         return {
-                            user_id: route.params.user_id
+                            userId: route.params.user_id
+                        }
+                    }
+                },
+                {
+                    name: 'Communications',
+                    path: 'communications/:userId',
+                    component: ()=> import('@/components/admin/communications/CommunicationPage.vue'),
+                    props: (route: RouteLocationNormalized) => {
+                        return {
+                            userId: route.params.user_id
                         }
                     }
                 }
