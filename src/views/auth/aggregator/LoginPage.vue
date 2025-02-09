@@ -172,6 +172,11 @@ const aggregatorLoginHandler = () => {
                   <div>
                     <label class="label font-semibold text-main-800" for="phoneNumber">Phone number</label>
                     <input
+                        v-model="loginAggregatorData.phoneNumber"
+                        :class="{
+                    'input-error': phoneNumberMeta.validated && !phoneNumberMeta.valid,
+                    'input-primary': phoneNumberMeta.validated && phoneNumberMeta.valid
+                  }"
 
                         id="phoneNumber"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
@@ -179,6 +184,12 @@ const aggregatorLoginHandler = () => {
                         required
                         type="text"
                     />
+                    <small
+                        v-if="phoneNumberMeta.validated && !phoneNumberMeta.valid"
+                        class="text-sm text-rose-500"
+                    >
+                      {{ phoneNumberErrorMessage }}
+                    </small>
 
                   </div>
                   <div>
@@ -191,6 +202,11 @@ const aggregatorLoginHandler = () => {
                     </div>
                     <div>
                       <input
+                          v-model="loginAggregatorData.password"
+                          :class="{
+                    'input-error': passwordMeta.validated && !passwordMeta.valid,
+                    'input-primary': passwordMeta.validated && passwordMeta.valid
+                  }"
 
                           id="password"
                           class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
@@ -198,13 +214,16 @@ const aggregatorLoginHandler = () => {
                           required
                           type="password"
                       />
+                      <small v-if="passwordMeta.validated && !passwordMeta.valid" class="text-sm text-rose-500">
+                        {{ passwordErrorMessage }}
+                      </small>
 
                     </div>
                   </div>
                   <div class="w-full">
                     <button class="btn w-full bg-main-500 hover:bg-main-700" type="submit">
-                      <!--                      <span class="loading loading-spinner loading-md text-white"></span>-->
-                      <span class="text-white text-lg">Login</span>
+                      <span v-if="isLoading" class="loading loading-spinner loading-md text-white"></span>
+                      <span v-else class="text-white text-lg">Login</span>
                     </button>
                   </div>
                 </div>
