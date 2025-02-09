@@ -28,6 +28,12 @@ router.push({
   adminTabStore.setActiveTab('Create-Aggregator')
 
 }
+
+const addAggregatorHandler = ()=>{
+  router.push({
+    name: 'Create-Aggregator'
+  })
+}
 </script>
 
 <template>
@@ -51,7 +57,7 @@ router.push({
           </div>
           <div class="flex">
             <div
-                @click="addAggregator"
+                @click="addAggregatorHandler"
                 class="flex gap-2 btn btn-sm bg-main-400 text-main-950 text-cursor-pointer hover:bg-main-300">
               <span class="material-icons-outlined text-sm">add</span>
               <span class="hidden md:block">Add aggregator</span>
