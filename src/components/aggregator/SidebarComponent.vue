@@ -2,11 +2,13 @@
 import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from '@headlessui/vue'
 import {useTabStore} from "@/stores/aggregatorTabstore.ts";
 import {useRouter} from "vue-router";
-import {useAdminStore} from "@/stores/aggregatorStore.ts";
+import {useAggregatorStore} from "@/stores/aggregatorStore.ts";
+import {useAggregatorAuthStore} from "@/stores/aggregatorAuthStore.ts";
 
 const tabStore = useTabStore()
 const router = useRouter()
-const aggregatorStore = useAdminStore()
+const aggregatorStore = useAggregatorStore()
+const aggregatorAuthStore = useAggregatorAuthStore()
 
 
 const props = defineProps<{
@@ -16,7 +18,8 @@ const props = defineProps<{
 const handleTab = (tab: string) => {
   tabStore.setActiveTab(tab)
   router.push({
-    name: tab
+    name: tab,
+    params: {userId: aggregatorAuthStore.getAggregatorInfo()?.userId}
   })
 }
 
