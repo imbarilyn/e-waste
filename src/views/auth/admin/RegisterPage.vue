@@ -2,6 +2,208 @@
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const adminAuthStore = useAdminAuthStore()
+const createAdminData = reactive({
+  fullName: '',
+  phoneNumber: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+})
+
+const isLoading = ref(false)
+
+const fullNameValidator = (value: string) => {
+  if (!value) {
+    return 'Full name is required'
+  }
+
+  if (value.length > 50) {
+    return 'Full name must be less than 50 characters'
+  }
+
+  return true
+}
+const {
+  value: fullName,
+  errorMessage: fullNameErrorMessage,
+  meta: fullNameMeta
+} = useField('fullName', fullNameValidator)
+
+
+watch(
+    () => createAdminData.fullName,
+    (value: string) => {
+      fullName.value = value
+    }
+)
+
+const emailValidator = (value: string) => {
+  if (!value) {
+    return 'Email is required'
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  if (!emailRegex.test(value)) {
+    return 'Email must be valid'
+  }
+
+  if (value.length > 50) {
+    return 'Email must be less than 50 characters'
+  }
+
+  return true
+}
+
+const {
+  value: email,
+  errorMessage: emailErrorMessage,
+  meta: emailMeta
+} = useField('email', emailValidator)
+
+watch(
+    () => createAdminData.email,
+    (value: string) => {
+      email.value = value
+    }
+)
+
+const phoneNumberValidator = (value: string) => {
+  if (!value) {
+    return 'Phone number is required'
+  }
+
+  const phoneRegex = /^(\+254|0)[1-9]\d{8}$/
+  if (!phoneRegex.test(value)) {
+    return 'Phone number is invalid'
+  }
+  return true
+}
+
+const {
+  value: phoneNumber,
+  errorMessage: phoneNumberErrorMessage,
+  meta: phoneNumberMeta
+} = useField('phoneNumber', phoneNumberValidator)
+
+watch(
+    () => createAdminData.phoneNumber,
+    (value: string) => {
+      phoneNumber.value = value
+    }
+)
+
+const passwordValidator=(value: string)=>{
+  if(!value){
+    return 'Password is required'
+  }
+
+  if(value.length < 6){
+    return 'Password must be at least 6 characters'
+  }
+
+  return true
+}
+
+const {
+  value: password,
+  errorMessage: passwordErrorMessage,
+  meta: passwordMeta
+} = useField('password', passwordValidator)
+
+watch(
+    () => createAdminData.password,
+    (value: string) => {
+      password.value = value
+    }
+)
+
+const confirmPasswordValidator = (value: string) => {
+  if (!value) {
+    return 'Confirm password is required'
+  }
+
+  if (value !== createAdminData.password) {
+    return 'Passwords do not match'
+  }
+  return true
+}
+
+const {
+  value: confirmPassword,
+  errorMessage: confirmPasswordErrorMessage,
+  meta: confirmPasswordMeta
+} = useField('confirmPassword', confirmPasswordValidator)
+
+watch(
+    () => createAdminData.confirmPassword,
+    (value: string) => {
+      confirmPassword.value = value
+    }
+)
+
+
+const everyThingOk = computed(()=>{
+  return(
+      fullNameMeta.validated && fullNameMeta.valid &&
+      emailMeta.validated && emailMeta.valid &&
+      phoneNumberMeta.validated && phoneNumberMeta.valid &&
+      passwordMeta.validated && passwordMeta.valid &&
+      confirmPasswordMeta.validated && confirmPasswordMeta.valid
+  )
+})
+
+
+
+const createAdminHandler = () => {
+  if(everyThingOk.value){
+    isLoading.value = true
+    adminAuthStore.createAdmin(createAdminData)
+        .then((resp) => {
+          console.log('Response---->', resp)
+          if(resp.result === 'success'){
+            setTimeout(()=>{
+              isLoading.value = false
+              router.push({
+                path: '/auth'
+              })
+            }, 1500)
+          }
+          else{
+            setTimeout(()=>{
+              isLoading.value = false
+              adminAuthStore.setIsAuthenticationError({
+                isError: true,
+                message: resp.message,
+                type: 'error'
+              })
+
+            }, 1500)
+          }
+
+        })
+        .catch(() => {
+          setTimeout(()=>{
+            isLoading.value = false
+            adminAuthStore.setIsAuthenticationError({
+              isError: true,
+              message: 'An error occurred, please try again',
+              type: 'error'
+            })
+
+          }, 1500)
+
+        })
+
+  }
+
+  else{
+    console.log('Please fill in all the required fields')
+  }
+}
+
+
 
 </script>
 
