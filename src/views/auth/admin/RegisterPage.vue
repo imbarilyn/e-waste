@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
+import {computed, reactive, ref, watch} from "vue";
+import {useField} from "vee-validate";
+import { useAdminAuthStore } from '@/stores/adminAuthStore'
 
 const router = useRouter()
 const adminAuthStore = useAdminAuthStore()
@@ -260,56 +263,100 @@ const createAdminHandler = () => {
                   <div>
                     <label class="label font-semibold text-main-800" for="fullName">Full name</label>
                     <input
-
+                        v-model="createAdminData.fullName"
+                        :class="{
+                    'input-error': fullNameMeta.validated && !fullNameMeta.valid,
+                    'input-primary': fullNameMeta.validated && fullNameMeta.valid
+                  }"
                         id="fullName"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
                         placeholder="John Doe"
                         required
                         type="text"
                     />
+                    <small
+                        v-if="fullNameMeta.validated && !fullNameMeta.valid"
+                        class="text-sm text-rose-500"
+                    >
+                      {{ fullNameErrorMessage }}
+                    </small>
 
                   </div>
                   <div>
                     <label class="label font-semibold text-main-800" for="phoneNumber">Phone number</label>
                     <input
-
+                        v-model="createAdminData.phoneNumber"
+                        :class="{
+                    'input-error': phoneNumberMeta.validated && !phoneNumberMeta.valid,
+                    'input-primary': phoneNumberMeta.validated && phoneNumberMeta.valid
+                  }"
                         id="phoneNumber"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
                         placeholder="0712345678"
                         required
                         type="text"
                     />
+                    <small
+                        v-if="phoneNumberMeta.validated && !phoneNumberMeta.valid"
+                        class="text-sm text-rose-500"
+                    >
+                      {{ phoneNumberErrorMessage }}
+                    </small>
 
                   </div>
                   <div>
                     <label class="label font-semibold text-main-800" for="email">Email address</label>
                     <input
-
+                        v-model="createAdminData.email"
+                        :class="{
+                    'input-error': emailMeta.validated && !emailMeta.valid,
+                    'input-primary': emailMeta.validated && emailMeta.valid
+                  }"
                         id="email"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
                         placeholder="johndoe@gmail.com"
                         required
                         type="text"
                     />
+                    <small v-if="emailMeta.validated && !emailMeta.valid" class="text-sm text-rose-500">
+                      {{ emailErrorMessage }}
+                    </small>
 
                   </div>
                   <div>
                       <label class="label font-semibold text-main-800" for="email">Password</label>
                       <input
+                          v-model="createAdminData.password"
+                          :class="{
+                    'input-error': passwordMeta.validated && !passwordMeta.valid,
+                    'input-primary': passwordMeta.validated && passwordMeta.valid
+                  }"
+
                           id="password"
                           class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
                           required
                           type="password"
                       />
+                    <small v-if="passwordMeta.validated && !passwordMeta.valid" class="text-sm text-rose-500">
+                      {{ passwordErrorMessage }}
+                    </small>
                   </div>
                   <div>
                     <label class="label font-semibold text-main-800" for="email">Confirm password</label>
                     <input
+                        v-model="createAdminData.confirmPassword"
+                        :class="{
+                    'input-error': confirmPasswordMeta.validated && !confirmPasswordMeta.valid,
+                    'input-primary': confirmPasswordMeta.validated && confirmPasswordMeta.valid
+                  }"
                         id="confirmPassword"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
                         required
                         type="password"
                     />
+                    <small v-if="confirmPasswordMeta.validated && !confirmPasswordMeta.valid" class="text-sm text-rose-500">
+                      {{ confirmPasswordErrorMessage }}
+                    </small>
                   </div>
                   <div class="w-full">
                     <button class="btn w-full bg-main-500 hover:bg-main-700" type="submit">
