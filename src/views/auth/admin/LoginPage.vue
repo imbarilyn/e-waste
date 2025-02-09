@@ -1,7 +1,123 @@
 <script lang="ts" setup>
 import {useRouter} from "vue-router";
+import {ref, watch, reactive, computed} from "vue";
+import {useField} from "vee-validate";
+import {useAdminAuthStore} from "@/stores/adminAuthStore.ts";
 
+
+const adminAuthStore = useAdminAuthStore()
 const router = useRouter()
+const isLoading = ref(false)
+const loginAdminData = reactive(
+    {
+      phoneNumber: '',
+      password: ''
+    }
+)
+
+
+const phoneNumberValidator = (value: string) => {
+  if (!value) {
+    return 'Phone number is required'
+  }
+
+  const phoneRegex = /^(\+254|0)[1-9]\d{8}$/
+  if (!phoneRegex.test(value)) {
+    return 'Phone number is invalid'
+  }
+  return true
+}
+
+const {
+  value: phoneNumber,
+  errorMessage: phoneNumberErrorMessage,
+  meta: phoneNumberMeta
+} = useField('phoneNumber', phoneNumberValidator)
+
+watch(
+    () => loginAdminData.phoneNumber,
+    (value: string) => {
+      phoneNumber.value = value
+    }
+)
+
+const passwordValidator = (value: string) => {
+  if (!value) {
+    return 'Password is required'
+  }
+
+  if (value.length < 6) {
+    return 'Password must be at least 6 characters'
+  }
+
+  return true
+}
+
+const {
+  value: password,
+  errorMessage: passwordErrorMessage,
+  meta: passwordMeta
+} = useField('password', passwordValidator)
+
+watch(
+    () => loginAdminData.password,
+    (value: string) => {
+      password.value = value
+    }
+)
+
+const everyThingOk = computed(() => {
+  return (
+      phoneNumberMeta.validated && phoneNumberMeta.valid &&
+      passwordMeta.validated && passwordMeta.valid
+  )
+})
+
+const adminLoginHandler = () => {
+  if (everyThingOk.value) {
+    console.log(loginAdminData)
+    isLoading.value = true
+    adminAuthStore.adminLogin(loginAdminData)
+        .then((res) =>{
+          console.log('login response-admin', res)
+          if(res?.result === 'success'){
+            setTimeout(()=>{
+              isLoading.value = false
+              router.push({
+                name: 'Admin-Overview',
+                params: {
+                  userId: adminAuthStore.getAdminInfo()?.userId
+                }
+              })
+            }, 1500)
+          } else{
+            setTimeout(()=>{
+              isLoading.value = false
+              adminAuthStore.setIsAuthenticationError({
+                isError: true,
+                message: res?.message,
+                type: 'error'
+              })
+
+            }, 1500)
+
+          }
+        })
+        .catch((error) => {
+        setTimeout(()=>{
+          isLoading.value = false
+          adminAuthStore.setIsAuthenticationError({
+            isError: true,
+            message: 'An error occurred',
+            type: 'error'
+          })
+        }, 1500)
+        })
+
+  } return
+}
+
+
 </script>
 
 <template>
