@@ -157,7 +157,7 @@ const adminLoginHandler = () => {
       >
         <div class="md:mt-5">
           <!-- Form -->
-          <form class="md:my-4 my-24">
+          <form class="md:my-4 my-24" @submit.prevent="adminLoginHandler">
             <div class="grid md:gap-y-4">
               <div class="flex flex-col md:space-y-1">
                 <div class="flex flex-col space-y-5">
@@ -173,13 +173,23 @@ const adminLoginHandler = () => {
                   <div>
                     <label class="label font-semibold text-main-800" for="phoneNumber">Phone number</label>
                     <input
-
+                        v-model="loginAdminData.phoneNumber"
+                        :class="{
+                    'input-error': phoneNumberMeta.validated && !phoneNumberMeta.valid,
+                    'input-primary': phoneNumberMeta.validated && phoneNumberMeta.valid
+                  }"
                         id="phoneNumber"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
                         placeholder="0712345678"
                         required
                         type="text"
                     />
+                    <small
+                        v-if="phoneNumberMeta.validated && !phoneNumberMeta.valid"
+                        class="text-sm text-rose-500"
+                    >
+                      {{ phoneNumberErrorMessage }}
+                    </small>
 
                   </div>
                   <div>
@@ -192,20 +202,30 @@ const adminLoginHandler = () => {
                     </div>
                     <div>
                       <input
+                          v-model="loginAdminData.password"
+                          :class="{
+                    'input-error': passwordMeta.validated && !passwordMeta.valid,
+                    'input-primary': passwordMeta.validated && passwordMeta.valid
+                  }"
 
                           id="password"
                           class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
-
                           required
                           type="password"
+
                       />
+                      <small v-if="passwordMeta.validated && !passwordMeta.valid" class="text-sm text-rose-500">
+                        {{ passwordErrorMessage }}
+                      </small>
 
                     </div>
                   </div>
                   <div class="w-full">
                     <button class="btn w-full bg-main-500 hover:bg-main-700" type="submit">
-<!--                      <span class="loading loading-spinner loading-md text-white"></span>-->
-                      <span class="text-white text-lg">Login</span>
+                      <span
+                          v-if="isLoading"
+                          class="loading loading-spinner loading-md text-white"></span>
+                      <span v-else class="text-white text-lg">Login</span>
                     </button>
                   </div>
                   <div class="md:hidden block">
