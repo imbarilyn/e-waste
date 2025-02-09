@@ -1,7 +1,122 @@
 <script lang="ts" setup>
 import {useRouter} from "vue-router";
+import {computed, reactive, ref, watch} from "vue";
+import {useField} from "vee-validate";
+import {useAggregatorAuthStore} from "@/stores/aggregatorAuthStore.ts";
 
 const router = useRouter()
+const aggregatorAuthStore = useAggregatorAuthStore()
+const isLoading = ref(false)
+
+const loginAggregatorData = reactive(
+    {
+      phoneNumber: '',
+      password: ''
+    }
+)
+
+
+const phoneNumberValidator = (value: string) => {
+  if (!value) {
+    return 'Phone number is required'
+  }
+
+  const phoneRegex = /^(\+254|0)[1-9]\d{8}$/
+  if (!phoneRegex.test(value)) {
+    return 'Phone number is invalid'
+  }
+  return true
+}
+
+const {
+  value: phoneNumber,
+  errorMessage: phoneNumberErrorMessage,
+  meta: phoneNumberMeta
+} = useField('phoneNumber', phoneNumberValidator)
+
+watch(
+    () => loginAggregatorData.phoneNumber,
+    (value: string) => {
+      phoneNumber.value = value
+    }
+)
+
+const passwordValidator = (value: string) => {
+  if (!value) {
+    return 'Password is required'
+  }
+
+  if (value.length < 4) {
+    return 'Password must be at least 4 characters'
+  }
+
+  return true
+}
+
+const {
+  value: password,
+  errorMessage: passwordErrorMessage,
+  meta: passwordMeta
+} = useField('password', passwordValidator)
+
+watch(
+    () => loginAggregatorData.password,
+    (value: string) => {
+      password.value = value
+    }
+)
+
+const everyThingOk = computed(() => {
+  return (
+      phoneNumberMeta.validated && phoneNumberMeta.valid &&
+      passwordMeta.validated && passwordMeta.valid
+  )
+})
+
+const aggregatorLoginHandler = () => {
+  if (everyThingOk) {
+    isLoading.value = true
+    aggregatorAuthStore.loginAggregator(loginAggregatorData)
+        .then((res) => {
+          console.log('login response-admin', res)
+          if (res?.result === 'success') {
+            setTimeout(() => {
+              isLoading.value = false
+              router.push({
+                name: 'Aggregator-Overview',
+                params: {
+                  userId: aggregatorAuthStore.getAggregatorInfo()?.userId
+                }
+              })
+            }, 1500)
+          } else {
+            setTimeout(() => {
+              isLoading.value = false
+              aggregatorAuthStore.setIsAuthenticationError({
+                isError: true,
+                message: res?.message,
+                type: 'error'
+              })
+
+            }, 1500)
+
+          }
+        })
+        .catch((error) => {
+          setTimeout(() => {
+            isLoading.value = false
+            aggregatorAuthStore.setIsAuthenticationError({
+              isError: true,
+              message: 'An error occurred, please try again',
+              type: 'error'
+            })
+          }, 1500)
+        })
+
+  }
+  return
+}
+
 </script>
 
 <template>
