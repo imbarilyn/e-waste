@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import InventoryDataTable from "@/components/aggregator/inventory/InventoryDataTable.vue";
 import {useRouter} from "vue-router";
-import {useTabStore} from "@/stores/aggregatorTabstore.ts";
+import {useAggregatorTabStore} from "@/stores/aggregatorTabstore.ts";
+import InventoryOverview from "@/components/aggregator/overview/InventoryOverview.vue";
 
 const router = useRouter()
-const tabStore = useTabStore()
+const tabStore = useAggregatorTabStore()
 
-const handleViemMoreMaterial = ()=>{
-  tabStore.setActiveTab('Inventory')
+const handleVieMoreMaterial = ()=>{
+  tabStore.setActiveTab('Aggregator-Inventory')
   router.push({
-    name: 'Inventory'
+    name: 'Aggregator-Inventory'
   })
 }
 </script>
@@ -79,11 +80,11 @@ const handleViemMoreMaterial = ()=>{
       <div>
         <p class="!text-2xl font-semibold pb-4">Inventory section</p>
         <div>
-          <InventoryDataTable />
+          <InventoryOverview />
         </div>
         <div class="flex justify-end pt-4">
           <button
-              @click="handleViemMoreMaterial"
+              @click="handleVieMoreMaterial"
               class="btn btn-sm bg-main-400 text-main-950 text-cursor-pointer hover:bg-main-300">
             <span>View more</span>
             <span class="material-icons-outlined">east</span>
