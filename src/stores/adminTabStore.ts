@@ -9,7 +9,8 @@ export const useAdminTabStore = defineStore('adminTabStore', {
             { name: 'Analytics', value:'Admin-Analytics', icon: 'bar_chart' },
             {name: 'Portfolio', value: 'Admin-Portfolio', icon: 'bar_chart'},
             {name: 'Add Aggregator', value: 'Create-Aggregator', icon: 'person'},
-            {name: 'Communications', value: 'Communications', icon: 'email'},
+            {name: 'Communications', value: 'Admin-Communications', icon: 'email'},
+
         ] as { name: string, value:string, icon: string }[],
         activeTab: localStorage.getItem('activeTab') || 'Admin-Overview' as string
     }),
