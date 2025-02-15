@@ -1,8 +1,9 @@
-import * as aggregatorTabStore  from '@/stores/aggregatorTabstore.ts'
-import  * as adminTabStore from "@/stores/adminTabStore.ts";
+export * from './aggregatorTabstore.ts'
+export * from './adminTabStore.ts';
 
-import * as aggregatorStore from '@/stores/aggregatorStore.ts'
-import * as adminStore from "@/stores/adminStore.ts";
+export * from './aggregatorStore.ts'
+export * from './adminStore.ts';
 
-import *  as aggregatorAuthStore from "@/stores/aggregatorAuthStore.ts";
-import * as adminAuthStore from "@/stores/adminAuthStore.ts";
+
+export * from './aggregatorAuthStore.ts'
+export * from './adminAuthStore.ts'
