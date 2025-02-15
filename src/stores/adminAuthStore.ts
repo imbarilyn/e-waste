@@ -72,7 +72,7 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
         formData.append('confirm_password', adminPayload.confirmPassword)
 
         try {
-            const response = await fetch(`${BASE_URL}/admin/`, {
+            const response = await fetch(`${BASE_URL}/auth/admin/`, {
                 method: 'POST',
                 mode: 'cors',
                 body: formData
@@ -105,7 +105,7 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
         formData.append('password', loginPayload.password)
 
         try {
-            const response = await fetch(`${BASE_URL}/admin/token`, {
+            const response = await fetch(`${BASE_URL}/auth/admin/token`, {
                 method: 'POST',
                 mode: 'cors',
                 body: formData
@@ -138,6 +138,30 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
             }
         }
     }
+
+    // async function getAggregators(adminId: string){
+    //     try{
+    //         const response = await fetch(`${BASE_URL}/admin/get-aggregators/${adminId}`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 Authorization: `Bearer ${adminToken.value}`
+    //             }
+    //         })
+    //         if(!response.ok){
+    //             return {
+    //                 result: 'fail',
+    //                 message: 'Failed to get aggregators'
+    //             }
+    //         }
+    //         const data = await response.json()
+    //         return {
+    //             result: 'success',
+    //             message: 'Aggregators retrieved successfully'
+    //         }
+    //     }
+    //
+    // }
 
     async function decodeToken(token:string) {
         const decode: AdminToken = jwtDecode((token))
@@ -202,7 +226,8 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
         createAdmin,
         logout,
         adminLogin,
-        getAdminInfo
+        getAdminInfo,
+        getToken
     }
 
 })
