@@ -9,12 +9,12 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   plugins: [
     vue(),
-    Restart({
-      restart: [
-        'vite.config.ts',
-        'src/**/*.{js,ts,vue}'
-      ]
-    }),
+    // Restart({
+    //   restart: [
+    //     'vite.config.ts',
+    //     'src/**/*.{js,ts,vue}'
+    //   ]
+    // }),
     vueJsx(),
     vueDevTools(),
   ],
