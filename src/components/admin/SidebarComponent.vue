@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from '@headlessui/vue'
 import {useRouter} from "vue-router";
-import { useAdminTabStore } from "@/stores/adminTabStore.ts";
-import { useAdminStore } from "@/stores/adminStore.ts";
-import {useAdminAuthStore} from "@/stores/adminAuthStore.ts";
+import { useAdminTabStore, useAdminStore, useAdminAuthStore  } from "@/stores";
+import { displayHour} from "@/modules/getHour.ts";
+
 
 const adminStore = useAdminStore()
 const router = useRouter()
@@ -25,6 +25,8 @@ const handleTab = (tab: string) => {
 }
 
 
+
+
 </script>
 
 <template>
@@ -35,10 +37,8 @@ const handleTab = (tab: string) => {
       <div class="px-4 sm:px-6">
         <div class="flex justify-center gap-4 pb-3">
           <img src="/images/e-waste.png" alt="e-waste-mage" class="h-12 w-12">
-<!--          <p class="font-normal">E-waste</p>-->
-
         </div>
-        <p class="text-center">Good afternoon Smith</p>
+        <p class="text-center">{{displayHour}} {{adminAuthStore.getAdminInfo()?.fullName}}</p>
       </div>
       <div v-for="(tab, index) in adminTabStore.getTabs"
            :key="index"
@@ -97,7 +97,7 @@ const handleTab = (tab: string) => {
                     <div class="flex justify-center gap-4 pb-3">
                       <img src="/images/e-waste.png" alt="e-waste-mage" class="h-12 w-12">
                     </div>
-                    <p class="text-center">Good afternoon Smith</p>
+                    <p class="text-center">{{displayHour}} {{adminAuthStore.getAdminInfo()?.fullName}}</p>
                     <div v-for="(tab, index) in adminTabStore.getTabs"
                          :key="index"
                          class="px-4 pt-5 sm:px-6 md:!text-lg !text-sm cursor-pointer"
