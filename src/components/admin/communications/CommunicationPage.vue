@@ -6,7 +6,11 @@ import 'datatables.net-select'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-buttons/js/buttons.html5.js'
 import 'datatables.net-buttons/js/buttons.print.js'
-import {ref} from "vue";
+import DialogModal from "@/components/commonComponent/DialogModal.vue";
+import {ref, reactive} from "vue";
+import {useAdminAuthStore, useAdminStore} from "@/stores";
+import moment from 'moment'
+import {showAlert} from "@/modules/sweetAlert.ts";
 
 interface Inventory {
   item_name: string,
@@ -97,6 +101,43 @@ $(document).ready(function() {
         </table>
       </div>
     </div>
+    <teleport to="body">
+      <DialogModal :is-open="openDialog.isOpen"
+                   @close-modal="openDialog.isOpen=false">
+        <template #title>
+          <div class="flex justify-center items-center">
+            <div class=" btn btn-sm btn-ghost " :class="[!isLoading? 'bg-main-300 btn-circle': '']">
+              <span v-if="!isLoading" class="material-icons-outlined text-main-500">error_outline</span>
+              <span v-else class="loading loading-bars loading-lg text-main-500"></span>
+            </div>
+
+          </div>
+
+        </template>
+        <template #body>
+          <div class="space-y-2">
+            <p class="text-center text-normal font-semibold">Resending aggregator <span class="text-main-500">{{communicationData?.full_name}}</span> an email</p>
+            <div class="">
+              <p>Are you sure you want to resend email?</p>
+<!--              <p>Once deleted cannot be recovered</p>-->
+            </div>
+
+          </div>
+        </template>
+        <template #footer>
+          <div class="flex justify-center gap-10">
+            <button class="btn btn-sm btn-ghost bg-slate-200 px-8" @click="openDialog.isOpen=false">Cancel
+            </button>
+            <button class="btn btn-sm btn-ghost text-white bg-main-500 hover:bg-main-600 px-8" @click="handleResend">
+              <span v-if="isLoading" class="loading loading-spinner loading-md"></span>
+              <span v-else>Resend</span>
+            </button>
+
+          </div>
+        </template>
+
+      </DialogModal>
+    </teleport>
   </div>
 
 </template>
