@@ -46,6 +46,7 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
     const adminTokenExpiry = useStorage('admin-token-expiry', '')
     const adminData = useStorage('admin-data', '')
     const adminEverLoggedIn = ref(false)
+    const getToken = computed(() => adminToken.value)
     const IsAuthenticationError = ref<IsAuthenticationError>({
         isError: false,
         message: '',
