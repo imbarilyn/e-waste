@@ -2,10 +2,10 @@
 import {useRouter} from "vue-router";
 import {ref, watch, reactive, computed} from "vue";
 import {useField} from "vee-validate";
-import {useAdminAuthStore} from "@/stores/adminAuthStore.ts";
-
+import {useAdminAuthStore, useAdminTabStore} from "@/stores";
 
 const adminAuthStore = useAdminAuthStore()
+const adminTabStore = useAdminTabStore()
 const router = useRouter()
 const isLoading = ref(false)
 const loginAdminData = reactive(
@@ -83,6 +83,8 @@ const adminLoginHandler = () => {
           if(res?.result === 'success'){
             setTimeout(()=>{
               isLoading.value = false
+              adminTabStore.setActiveTab('Admin-Overview')
+
               router.push({
                 name: 'Admin-Overview',
                 params: {
