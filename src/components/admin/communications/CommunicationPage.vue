@@ -200,7 +200,7 @@ $(document).ready(function() {
       }
     },
     scrollX: true,
-    paging: false,
+    paging: true,
     select: true,
     responsive: true
   })
@@ -216,7 +216,6 @@ $(document).ready(function() {
 })
 
 </script>
-
 <template>
 
   <div>
@@ -225,7 +224,7 @@ $(document).ready(function() {
     </div>
     <div class="min-w-80  p-8 shadow-2xl rounded-2xl border border-1 ">
       <div>
-        <table id="myTable" class="display">
+        <table id="myTable" class="display stripe compact cell-border">
           <thead>
           <tr></tr>
           </thead>
