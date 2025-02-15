@@ -4,6 +4,7 @@ import {ref} from "vue";
 import {computed} from "vue";
 import moment from "moment";
 import {jwtDecode} from "jwt-decode";
+import {useAdminAuthStore} from "@/stores/adminAuthStore.ts";
 
 
 interface  AggregatorPayload {
@@ -46,6 +47,7 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
     const aggregatorTokenExpiry = useStorage('aggregator-token-expiry', '')
     const aggregator = useStorage('aggregator', '')
     const aggregatorEverLoggedIn = ref(false)
+    const getAggregatorToken = computed(()=> aggregatorToken.value)
     const IsAuthenticationError = ref<IsAuthenticationError>({
         isError: false,
         message: '',
@@ -64,6 +66,7 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
 
     async function createAggregator (aggregatorPayload: AggregatorPayload){
         const formData = new FormData()
+        const adminAuthStore = useAdminAuthStore()
         formData.append('full_name', aggregatorPayload.fullName)
         formData.append('email', aggregatorPayload.email)
         formData.append('phone_number', aggregatorPayload.phoneNumber)
@@ -71,20 +74,25 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
         formData.append('location', aggregatorPayload.location)
 
         try{
-            const response = await fetch(`${BASE_URL}/aggregator/create`, {
+            const response = await fetch(`${BASE_URL}/auth/aggregator/create`, {
                 method: 'POST',
                 mode: 'cors',
-                body: formData
+                body: formData,
+                headers: {
+                    Authorization: `Bearer ${adminAuthStore.getToken}`
+                }
             })
+            const data = await response.json()
+            console.log('creating aggregator', data)
             if (!response.ok){
               console.log('failed to create aggregator', response)
               return {
                 result: 'fail',
-                message: 'Failed to create aggregator, please try again'
+                message: 'Could not validate user, please try to login'
               }
             }
 
-            const data = await response.json()
+
             console.log('creating aggregator', data)
             return {
                 result: data.result,
@@ -105,7 +113,7 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
         formData.append('password', loginPayload.password)
 
         try {
-            const response = await fetch(`${BASE_URL}/aggregator/token`, {
+            const response = await fetch(`${BASE_URL}/auth/aggregator/token`, {
                 method: 'POST',
                 mode: 'cors',
                 body: formData
@@ -198,7 +206,8 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
         loginAggregator,
         getAggregatorInfo,
         setIsAuthenticationError,
-        IsAuthenticationError
+        IsAuthenticationError,
+        getAggregatorToken
     }
 
 })
