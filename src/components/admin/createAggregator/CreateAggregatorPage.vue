@@ -4,8 +4,7 @@ import {useField} from 'vee-validate'
 import {useAdminStore} from "@/stores/adminStore.ts";
 import {useAggregatorAuthStore} from "@/stores/aggregatorAuthStore.ts";
 import {showAlert} from "@/modules/sweetAlert.ts";
-import ListBox from "@/components/admin/ComboBox.vue";
-import ComboBox from "@/components/admin/ComboBox.vue";
+import ComboBox from "@/components/commonComponent/ComboBox.vue";
 import {useAdminAuthStore} from "@/stores/adminAuthStore.ts";
 
 const createAggregatorData = reactive({
