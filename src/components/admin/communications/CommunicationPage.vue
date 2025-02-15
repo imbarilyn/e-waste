@@ -87,31 +87,46 @@ const handleResend = ()=>{
 
 
 const columns = [
-  { data: 'item_name', title: 'Name' },
-  { data: 'material_type', title: 'Material' },
-  { data: 'weight', title: 'Weight',
-    render: (data: number, type: string, row: Inventory)=> {
-      return `${row.weight} kg`
+  { data: 'full_name', title: 'Aggregator name' },
+  {data: 'email', title: 'Email'},
+  { data: 'head', title: 'Email head' },
+  { data: 'body', title: 'Email body',
+    render: (data: string, type: string, row: Communication)=> {
+      return `${row.body.substring(0, 300)}...`
     }
   },
-  { data: 'quantity', title: 'quantity',
-    render: (data: number, type: string, row: Inventory)=> {
-      return `${row.quantity} pcs`
+  { data: 'created_at', title: 'Created at',
+    render: (data: string, type: string, row:Communication)=>{
+      return moment(row.created_at).format('DD MMMM YYYY-hh:mm a')
+
     }
   },
-  { data: 'condition', title: 'condition',
-    render: (data: string, type: string, row: Inventory)=> {
-      if (row.condition === 'good') {
-        return `<span class="bg-conifer-500 text-white rounded-full px-4 py-1">${row.condition}</span>`
-      } else if (row.condition === 'fair') {
-        return `<span class="bg-main-500 text-white rounded-full px-4 py-1">${row.condition}</span>`
+  { data: 'status', title: 'Status',
+    render: (data: string, type: string, row: Communication)=> {
+      if (row.status === 'sent') {
+        return `<span class="bg-conifer-500 text-white rounded-full px-4 py-1">${row.status}</span>`
+      } else if (row.status === 'pending') {
+        return `<span class="bg-main-500 text-white rounded-full px-4 py-1">${row.status}</span>`
       } else {
-        return `<span class="bg-yellow-500 text-white rounded-full px-4 py-1">${row.condition}</span>`
+        return `<span class="bg-rose-500 text-white rounded-full px-4 py-1">${row.status}</span>`
 
       }
     }
   },
-  {data: 'creation_date', title: 'Date'}
+  {
+    data: null,
+    title: 'Actions',
+    orderable: false,
+    searchable: false,
+    render: (data: string, type:string, row: Communication) =>{
+      return `
+        <div class="flex gap-4">
+          <button id='view-btn' class=" btn btn-sm bg-main-500 text-white px-4 py-1 rounded-lg hover:bg-main-600">View</button>
+          <button id="resend-btn" class=" btn btn-sm  bg-yellow-500 text-white px-4 py-1 rounded-lg hover:bg-yellow-600">Resend</button>
+        </div>
+      `
+    }
+  }
 ]
 
 const exceptedColumns = Array.from({ length: columns.length-1}, (v, k) => k)
