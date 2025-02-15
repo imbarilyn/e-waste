@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import InventoryDataTable from "@/components/aggregator/inventory/InventoryDataTable.vue";
+import InventoryDataTable from "@/components/admin/inventory/InventoryDataTable.vue";
 </script>
 
 <template>

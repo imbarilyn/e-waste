@@ -13,6 +13,18 @@ const handleCollapseSidebar = ()=>{
 const expandSmall = ()=>{
   aggregatorStore.setExpandSidebarSmall(true)
 }
+
+const addProduct = ()=>{
+  aggregatorTabStore.setActiveTab('Aggregator-Product')
+  router.push({
+    name: 'Aggregator-Product',
+    params: {
+      userId: aggregatorAuthStore.getAggregatorInfo()?.userId
+    }
+  })
+
+
+}
 </script>
 
 <template>
