@@ -134,7 +134,7 @@ const exceptedColumns = Array.from({ length: columns.length-1}, (v, k) => k)
 $(document).ready(function() {
   material_table_el.value = $('#myTable');
 
-  material_table_el.value?.DataTable({
+  const table = $('#myTable').DataTable({
     columns: columns,
     ajax: {
       url: `${BASE_URL}/data`,
@@ -143,6 +143,44 @@ $(document).ready(function() {
         return json;
       }
     },
+    dom: '<"flex items-center justify-between"<"w-1/3"l><"w-1/3 text-center"B><"w-1/3 text-right"f>><"mt-8"rt><"flex justify-between pt-4"<"w-1/2"i><"flex justify-end w-1/2"p>>',
+    buttons: [
+      {
+        extend: 'csv',
+        className: 'bg-transparent',
+        exportOptions: {
+          columns: acceptedColumns
+        }
+      },
+      {
+        extend: 'print',
+        className: 'bg-transparent',
+        exportOptions: {
+          columns: acceptedColumns
+        }
+      },
+      {
+        extend: 'pdf',
+        className: 'bg-transparent',
+        exportOptions: {
+          columns: acceptedColumns
+        }
+      },
+      {
+        extend: 'excel',
+        className: 'bg-transparent',
+        exportOptions: {
+          columns: acceptedColumns
+        }
+      },
+      {
+        extend: 'print',
+        className: 'bg-transparent',
+        exportOptions: {
+          columns: acceptedColumns
+        }
+      }
+    ],
     // for page length
     layout: {
       // topStart: null,
