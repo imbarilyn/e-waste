@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia'
 import {ref} from "vue";
+import {useAggregatorAuthStore} from "@/stores/aggregatorAuthStore.ts";
 
 export interface Product {
     name: string
@@ -12,6 +13,7 @@ export interface Product {
     images:File[]
 }
 
+const BASE_URL = import.meta.env.VITE_BASE_URL
 export const useAggregatorStore = defineStore('aggregatorStore', () => {
     const expandSidebarSmall = ref(false)
 
