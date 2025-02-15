@@ -132,12 +132,12 @@ const columns = [
 const exceptedColumns = Array.from({ length: columns.length-1}, (v, k) => k)
 
 $(document).ready(function() {
-  material_table_el.value = $('#myTable');
+  // material_table_el.value = $('#myTable');
 
   const table = $('#myTable').DataTable({
     columns: columns,
     ajax: {
-      url: `${BASE_URL}/data`,
+      url: `${BASE_URL}/admin/get-aggregators/email-communication/${adminAuthStore.getAdminInfo()?.userId}`,
       dataSrc: (json) => {
         console.log('data', json)
         return json;
