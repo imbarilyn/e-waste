@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import InventoryDataTable from "@/components/admin/inventory/InventoryDataTable.vue";
+import InventoryOverview from "@/components/admin/overview/InventoryOverview.vue";
 import {useRouter} from "vue-router";
-import {useTabStore} from "@/stores/aggregatorTabstore.ts";
+import {useAdminTabStore} from "@/stores";
+import {useAdminAuthStore} from "@/stores";
 
 const router = useRouter()
-const tabStore = useTabStore()
+const tabStore = useAdminTabStore()
+const adminAuthStore = useAdminAuthStore()
 
-const handleViemMoreMaterial = ()=>{
-  tabStore.setActiveTab('Inventory')
+const handleViewMoreMaterial = ()=>{
+  tabStore.setActiveTab('Admin-Inventory')
   router.push({
-    name: 'Aggregator-Inventory'
+    name: 'Admin-Inventory',
+    params: {userId:  adminAuthStore.getAdminInfo()?.userId}
   })
 }
 </script>
@@ -79,11 +82,11 @@ const handleViemMoreMaterial = ()=>{
       <div>
         <p class="!text-2xl font-semibold pb-4">Inventory section</p>
         <div>
-          <InventoryDataTable />
+          <InventoryOverview />
         </div>
         <div class="flex justify-end pt-4">
           <button
-              @click="handleViemMoreMaterial"
+              @click="handleViewMoreMaterial"
               class="btn btn-sm bg-main-400 text-main-950 text-cursor-pointer hover:bg-main-300">
             <span>View more</span>
             <span class="material-icons-outlined">east</span>
