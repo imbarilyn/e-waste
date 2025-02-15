@@ -90,8 +90,10 @@ export const useAggregatorStore = defineStore('aggregatorStore', () => {
 
 
 
-    return {
-        expandSidebarSmall,
-        setExpandSidebarSmall
-    }
+return {
+    expandSidebarSmall,
+    setExpandSidebarSmall,
+    addProduct
+
+}
 })
