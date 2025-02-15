@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import { useAuthStore } from '@/stores/authStore'
 import { computed, onMounted } from 'vue'
-const authStore = useAuthStore()
+import {useAdminAuthStore} from "@/stores/adminAuthStore.ts";
+const adminAuthStore = useAdminAuthStore()
 const props = defineProps<{
   message: string
   isOpen: boolean
@@ -10,7 +10,11 @@ const props = defineProps<{
 }>()
 
 const closeNotificationBanner = () => {
-  authStore.closeBanner()
+  adminAuthStore.setIsAuthenticationError({
+    isError: false,
+    message: '',
+    type: 'success'
+  })
 }
 
 const bannerBgColor = computed(()=>{
@@ -61,7 +65,7 @@ const bannerDashColor = computed(()=>{
   <template>
     <div
       v-if="props.isOpen"
-      class="absolute w-full flex py-2 px-4" :class="bannerBgColor">
+      class="absolute z-50 w-full  mx-auto flex justify-center  py-2 px-4" :class="bannerBgColor">
       <div :class="bannerDashColor" class="absolute inset-y-0 left-0 w-1"></div>
       <div class="flex gap-4">
         <div class="flex items-center" :class="bannerTextColor">
