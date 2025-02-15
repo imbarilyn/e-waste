@@ -12,17 +12,80 @@ import {useAdminAuthStore, useAdminStore} from "@/stores";
 import moment from 'moment'
 import {showAlert} from "@/modules/sweetAlert.ts";
 
-interface Inventory {
-  item_name: string,
-  material_type: string,
-  weight: number,
-  quantity: number,
-  condition: string,
-  creation_date: string
+const adminAuthStore = useAdminAuthStore()
+const adminStore = useAdminStore()
+
+interface Communication {
+  id: string,
+  head: string,
+  body: string,
+  status: string,
+  created_at: string,
+  full_name: string,
+  email:string
 }
 
-const  BASE_URL = 'http://localhost:3000'
+const communicationData = ref<Communication | null>(null)
 const material_table_el = ref<JQuery<HTMLElement> | null>(null)
+// const  BASE_URL = 'http://localhost:3000'
+const BASE_URL = import.meta.env.VITE_BASE_URL
+const openDialog = ref({
+  isOpen: false
+})
+
+const closeDeleteDialog = ()=>{
+  openDialog.value.isOpen = false
+}
+
+const isLoading = ref(false)
+const handleResend = ()=>{
+  isLoading.value = true
+  if(communicationData.value){
+    adminStore.resendEmail({
+      head: communicationData.value.head,
+      body: communicationData?.value.body,
+      aggregatorEmail: communicationData?.value.email
+    })
+      .then((resp)=>{
+        if(resp?.result === 'success'){
+          setTimeout(()=>{
+            isLoading.value = false
+            openDialog.value.isOpen = false
+            showAlert({
+              type: 'success',
+              message: 'Email has been resent successfully'
+            })
+          }, 2000)
+        }
+        else{
+          setTimeout(()=>{
+            isLoading.value = false
+            openDialog.value.isOpen = false
+            showAlert({
+              type: 'error',
+              message: resp?.message
+            })
+          }, 2000)
+
+        }
+      })
+      .catch((error)=>{
+        setTimeout(() => {
+          isLoading.value = false
+          showAlert({
+            type: 'error',
+            message: 'Failed to resend email, please try again'
+          })
+        }, 2000)
+      })
+  }else{
+    console.log('No communication data', communicationData.value)
+  }
+
+
+}
+
+
 const columns = [
   { data: 'item_name', title: 'Name' },
   { data: 'material_type', title: 'Material' },
