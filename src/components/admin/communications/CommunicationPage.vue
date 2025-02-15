@@ -129,7 +129,16 @@ const columns = [
   }
 ]
 
-const exceptedColumns = Array.from({ length: columns.length-1}, (v, k) => k)
+
+
+// const exceptedColumns = Array.from({ length: columns.length-1}, (v, k) =>{
+// if(k === 0){
+//   return k
+// }
+//   // return k
+// } )
+
+const acceptedColumns = [0, 1, 4, 5]
 
 $(document).ready(function() {
   // material_table_el.value = $('#myTable');
@@ -194,6 +203,15 @@ $(document).ready(function() {
     paging: false,
     select: true,
     responsive: true
+  })
+
+  $('#myTable').on('click', '#resend-btn', function(){
+    console.log('We are clicking resend button')
+    openDialog.value.isOpen = true
+    const rowData = table.row($(this).closest('tr')).data()
+    // console.log(rowData)
+    communicationData.value = rowData
+    console.log('Communication Data array', communicationData.value)
   })
 })
 
