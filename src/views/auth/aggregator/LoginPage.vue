@@ -3,6 +3,7 @@ import {useRouter} from "vue-router";
 import {computed, reactive, ref, watch} from "vue";
 import {useField} from "vee-validate";
 import {useAggregatorAuthStore} from "@/stores/aggregatorAuthStore.ts";
+import NotificationBanner from "@/components/commonComponent/NotificationBanner.vue";
 
 const router = useRouter()
 const aggregatorAuthStore = useAggregatorAuthStore()
@@ -116,11 +117,24 @@ const aggregatorLoginHandler = () => {
   }
   return
 }
-
+const closeBanner = () =>{
+  aggregatorAuthStore.setIsAuthenticationError({
+    isError: false,
+    message: '',
+    type: 'success'
+  })
+}
 </script>
 
 <template>
   <div class="h-full w-full grid grid-cols-12 bg-main-300 md:bg-white">
+      <NotificationBanner
+                          :message="aggregatorAuthStore.isAuthenticationError.message"
+                          :type="aggregatorAuthStore.isAuthenticationError.type"
+                          :is-open="aggregatorAuthStore.isAuthenticationError.isError"
+                          @closeNotificationBanner="closeBanner"
+    />
+
 
     <div
         class="bg-main-300  md:rounded-tr-2xl md:rounded-br-2xl  md:h-screen flex  items-center md:justify-center md:col-span-6 col-span-12">
