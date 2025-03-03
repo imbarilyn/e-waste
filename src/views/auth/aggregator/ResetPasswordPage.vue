@@ -1,9 +1,127 @@
 <script lang="ts" setup>
-
-
 import {useRouter} from "vue-router";
+import {useAdminAuthStore, useAggregatorAuthStore} from "@/stores";
+import {computed, reactive, ref, watch} from "vue";
+import {useField} from "vee-validate";
+import {showAlert} from "@/modules/sweetAlert.ts";
+
 
 const router = useRouter()
+const aggregatorAuthStore = useAggregatorAuthStore()
+const isLoading = ref(false)
+
+interface ResetToken {
+  resetToken: string
+}
+
+
+const props = defineProps<ResetToken>()
+const resetPasswordData = reactive({
+  password: '',
+  confirmPassword: ''
+})
+
+const passwordValidator=(value: string)=>{
+  if(!value){
+    return 'Password is required'
+  }
+
+  if(value.length < 4){
+    return 'Password too short'
+  }
+
+  return true
+}
+
+const {
+  value: password,
+  errorMessage: passwordErrorMessage,
+  meta: passwordMeta
+} = useField('password', passwordValidator)
+
+watch(
+    () => resetPasswordData.password,
+    (value: string) => {
+      password.value = value
+    }
+)
+
+const confirmPasswordValidator = (value: string) => {
+  if (!value) {
+    return 'Confirm password is required'
+  }
+
+  if (value !== resetPasswordData.password) {
+    return 'Passwords do not match'
+  }
+  return true
+}
+
+const {
+  value: confirmPassword,
+  errorMessage: confirmPasswordErrorMessage,
+  meta: confirmPasswordMeta
+} = useField('confirmPassword', confirmPasswordValidator)
+
+watch(
+    () => resetPasswordData.confirmPassword,
+    (value: string) => {
+      confirmPassword.value = value
+    }
+)
+
+const everyThingOk = computed(()=>{
+  return(
+      passwordMeta.validated && passwordMeta.valid &&
+      confirmPasswordMeta.validated && confirmPasswordMeta.valid
+  )
+})
+
+const resetPasswordHandler = ()=>{
+  if(!everyThingOk.value){
+    return
+  }
+  else {
+    isLoading.value = true
+    aggregatorAuthStore.resetPassword({...resetPasswordData, resetToken: props.resetToken})
+        .then((resp) => {
+          if(resp.result === 'success'){
+            setTimeout(()=>{
+              isLoading.value = false
+              showAlert({
+                type: 'success',
+                message: resp.message
+              })
+              router.push({
+                path: '/auth/aggregator-login'
+              })
+            }, 1500)
+          }
+          else {
+            setTimeout(()=>{
+              isLoading.value = false
+              showAlert({
+                type: 'error',
+                message: resp.message
+              })
+            }, 1500)
+          }
+
+        })
+        .catch((err) => {
+          setTimeout(()=>{
+            isLoading.value = false
+            showAlert({
+              type: 'error',
+              message: 'An error occurred. Please try again'
+            })
+          }, 1500)
+
+        })
+  }
+
+}
+
 </script>
 
 <template>
@@ -36,7 +154,7 @@ const router = useRouter()
       >
         <div class="md:mt-5">
           <!-- Form -->
-          <form class="md:my-4 py-3 my-36">
+          <form class="md:my-4 py-3 my-36"  @submit.prevent="resetPasswordHandler">
             <div class="grid md:gap-y-4">
               <div class="flex flex-col md:space-y-1">
                 <div class="flex flex-col space-y-5">
@@ -50,29 +168,39 @@ const router = useRouter()
                   </div>
 
                   <div>
-                    <label class="label font-semibold text-main-800" for="password">Current password</label>
+                    <label class="label font-semibold text-main-800" for="password">New password</label>
                     <input
+                        v-model="resetPasswordData.password"
+                        :class="{ 'input border-1   focus:border-rose-500 focus:ring focus:ring-rose-500 focus:ring-offset-2  input-bordered border-rose-500': passwordMeta.validated && !passwordMeta.valid,
+
+                        }"
                         id="password"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
                         required
                         type="password"
                     />
+                    <small class="text-sm text-rose-500">{{passwordErrorMessage}}</small>
                   </div>
                   <div>
                     <label class="label font-semibold text-main-800" for="confirmPassword">Confirm password</label>
                     <input
+                        v-model="resetPasswordData.confirmPassword"
+                        :class="{ 'input border-1   focus:border-rose-500 focus:ring focus:ring-rose-500 focus:ring-offset-2  input-bordered border-rose-500': confirmPasswordMeta.validated && !confirmPasswordMeta.valid,
+
+                        }"
                         id="confirmPassword"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
                         required
                         type="password"
                     />
+                    <small class="text-rose-500 text-sm">{{confirmPasswordErrorMessage}}</small>
                   </div>
 
 
                   <div class="w-full">
                     <button class="btn w-full bg-main-500 hover:bg-main-700" type="submit">
-                      <!--                      <span class="loading loading-spinner loading-md text-white"></span>-->
-                      <span class="text-white text-lg">Rest password</span>
+                      <span  v-if="isLoading" class="loading loading-spinner loading-md text-white"></span>
+                      <span v-else class="text-white text-lg">Rest password</span>
                     </button>
                   </div>
                 </div>
