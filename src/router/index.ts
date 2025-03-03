@@ -48,8 +48,13 @@ const routes = [
             },
             {
                 name: 'admin-reset-password',
-                path: 'admin-reset-password',
+                path: 'admin-reset-password/:resetToken',
                 component: () => import('@/views/auth/admin/ResetPasswordPage.vue'),
+                props:(route: RouteLocationNormalized) => {
+                    return {
+                        resetToken: route.params.resetToken
+                    }
+                },
                 meta: {
                     requiresAuth: true,
                 }
@@ -67,8 +72,13 @@ const routes = [
             },
             {
                 name: 'aggregator-reset-password',
-                path: 'aggregator-reset-password',
+                path: 'aggregator-reset-password/:resetToken',
                 component: () => import('@/views/auth/aggregator/ResetPasswordPage.vue'),
+                props: (route: RouteLocationNormalized) => {
+                    return {
+                        resetToken: route.params.resetToken
+                    }
+                },
                 meta: {
                     requiresAuth: false,
                 }
