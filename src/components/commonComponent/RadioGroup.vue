@@ -2,8 +2,8 @@
 import {ref, watch} from 'vue'
 import {RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption,} from '@headlessui/vue'
 
-// eslint-disable-next-line no-redeclare
 interface MyRadioGroup {
+  id:number
   name: string
   color:  string
   icon: string
@@ -30,7 +30,7 @@ watch(() => selected.value, (newVal) => {
 <template>
   <div class="w-full py-3">
     <div class="mx-auto w-full">
-      <RadioGroup v-model="selected">
+      <RadioGroup v-model="selected" :weightUnit="props.weightUnit">
         <RadioGroupLabel class="sr-only">Server Size</RadioGroupLabel>
         <div class="space-y-0 grid grid-cols-12 gap-3">
           <RadioGroupOption
@@ -101,4 +101,5 @@ watch(() => selected.value, (newVal) => {
     </div>
   </div>
 </template>
+
 
