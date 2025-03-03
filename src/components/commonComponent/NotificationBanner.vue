@@ -9,12 +9,12 @@ const props = defineProps<{
   type: 'info' | 'success' | 'warning' | 'error'| null
 }>()
 
+
+const emits = defineEmits<{
+  (event: 'closeNotificationBanner'): void
+}>()
 const closeNotificationBanner = () => {
-  adminAuthStore.setIsAuthenticationError({
-    isError: false,
-    message: '',
-    type: 'success'
-  })
+  emits('closeNotificationBanner')
 }
 
 const bannerBgColor = computed(()=>{
@@ -58,7 +58,6 @@ const bannerDashColor = computed(()=>{
     return 'bg-gray-500'
   }
 })
-
 </script>
 
 
