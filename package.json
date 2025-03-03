@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+
     "build": "run-p type-check \"build-only {@}\" --",
+    "clear-pub": "rm -rfv public/assets/*.js public/assets/*.css",
+    "sync-pub": "rsync -av --progress dist/ public/",
+    "zip-pub": "rm -rfv e-waste.zip && zip -rv e-waste.zip public",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build"
@@ -13,6 +17,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.1.5",
+    "@preline/tabs": "^2.5.2",
     "@vueuse/core": "^12.5.0",
     "chart.js": "^4.4.7",
     "datatables.net-buttons": "^3.1.2",
@@ -23,6 +28,7 @@
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
     "pinia": "^2.3.1",
+    "preline": "^2.7.0",
     "sweetalert2": "^11.15.10",
     "vee-validate": "^4.15.0",
     "vue": "^3.5.13",
