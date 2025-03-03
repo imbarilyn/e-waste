@@ -79,8 +79,16 @@ const aggregatorLoginHandler = () => {
     isLoading.value = true
     aggregatorAuthStore.loginAggregator(loginAggregatorData)
         .then((res) => {
-          console.log('login response-admin', res)
-          if (res?.result === 'success') {
+          if (res?.result === 'fail') {
+            setTimeout(() => {
+              isLoading.value = false
+              aggregatorAuthStore.setIsAuthenticationError({
+                isError: true,
+                message: res?.message,
+                type: 'error'
+              })
+            }, 1500)
+          } else {
             setTimeout(() => {
               isLoading.value = false
               router.push({
@@ -90,17 +98,6 @@ const aggregatorLoginHandler = () => {
                 }
               })
             }, 1500)
-          } else {
-            setTimeout(() => {
-              isLoading.value = false
-              aggregatorAuthStore.setIsAuthenticationError({
-                isError: true,
-                message: res?.message,
-                type: 'error'
-              })
-
-            }, 1500)
-
           }
         })
         .catch((error) => {
@@ -187,10 +184,8 @@ const closeBanner = () =>{
                     <label class="label font-semibold text-main-800" for="phoneNumber">Phone number</label>
                     <input
                         v-model="loginAggregatorData.phoneNumber"
-                        :class="{
-                    'input-error': phoneNumberMeta.validated && !phoneNumberMeta.valid,
-                    'input-primary': phoneNumberMeta.validated && phoneNumberMeta.valid
-                  }"
+                        :class="{'input border-1   focus:border-rose-500 focus:ring focus:ring-rose-500 focus:ring-offset-2  input-bordered border-rose-500': phoneNumberMeta.validated && !phoneNumberMeta.valid}"
+
 
                         id="phoneNumber"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
@@ -217,10 +212,10 @@ const closeBanner = () =>{
                     <div>
                       <input
                           v-model="loginAggregatorData.password"
-                          :class="{
-                    'input-error': passwordMeta.validated && !passwordMeta.valid,
-                    'input-primary': passwordMeta.validated && passwordMeta.valid
-                  }"
+                          :class="{ 'input border-1   focus:border-rose-500 focus:ring focus:ring-rose-500 focus:ring-offset-2  input-bordered border-rose-500': passwordMeta.validated && !passwordMeta.valid,
+
+                        }"
+
 
                           id="password"
                           class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"

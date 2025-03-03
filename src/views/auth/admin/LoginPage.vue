@@ -3,6 +3,7 @@ import {useRouter} from "vue-router";
 import {ref, watch, reactive, computed} from "vue";
 import {useField} from "vee-validate";
 import {useAdminAuthStore, useAdminTabStore} from "@/stores";
+import NotificationBanner from "@/components/commonComponent/NotificationBanner.vue";
 
 const adminAuthStore = useAdminAuthStore()
 const adminTabStore = useAdminTabStore()
@@ -102,17 +103,6 @@ const adminLoginHandler = () => {
                 }
               })
             }, 1500)
-          } else{
-            setTimeout(()=>{
-              isLoading.value = false
-              adminAuthStore.setIsAuthenticationError({
-                isError: true,
-                message: res?.message,
-                type: 'error'
-              })
-
-            }, 1500)
-
           }
         })
         .catch((error) => {
@@ -199,10 +189,7 @@ const closeBanner = () =>{
                     <label class="label font-semibold text-main-800" for="phoneNumber">Phone number</label>
                     <input
                         v-model="loginAdminData.phoneNumber"
-                        :class="{
-                    'input-error': phoneNumberMeta.validated && !phoneNumberMeta.valid,
-                    'input-primary': phoneNumberMeta.validated && phoneNumberMeta.valid
-                  }"
+                        :class="{ 'input border-1   focus:border-rose-500 focus:ring focus:ring-rose-500 focus:ring-offset-2  input-bordered border-rose-500': phoneNumberMeta.validated && ! phoneNumberMeta.valid}"
                         id="phoneNumber"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
                         placeholder="0712345678"
@@ -228,10 +215,9 @@ const closeBanner = () =>{
                     <div>
                       <input
                           v-model="loginAdminData.password"
-                          :class="{
-                    'input-error': passwordMeta.validated && !passwordMeta.valid,
-                    'input-primary': passwordMeta.validated && passwordMeta.valid
-                  }"
+                          :class="{ 'input border-1   focus:border-rose-500 focus:ring focus:ring-rose-500 focus:ring-offset-2  input-bordered border-rose-500': passwordMeta.validated && ! passwordMeta.valid,
+
+                        }"
 
                           id="password"
                           class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
