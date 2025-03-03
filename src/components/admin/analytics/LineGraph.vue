@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
-import {ref, Ref, reactive, onMounted} from "vue";
+import {ref, reactive, onMounted} from "vue";
+import type {Ref} from 'vue'
 import {Chart} from "chart.js/auto";
 const refLineGraph: Ref<HTMLCanvasElement | null> = ref<HTMLCanvasElement | null>(null)
 const lineGraphInstance: Ref<Chart<'line', number[], string> | null> = ref(null)

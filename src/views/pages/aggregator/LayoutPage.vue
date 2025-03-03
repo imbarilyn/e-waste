@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref, watch} from 'vue'
+import {onMounted, ref, watch, computed} from 'vue'
 import {useAggregatorTabStore, useAggregatorStore, useAggregatorAuthStore,} from "@/stores";
 import {useRouter} from "vue-router";
 import SidebarComponent from "@/components/aggregator/SidebarComponent.vue";
@@ -26,8 +26,6 @@ const addProduct = ()=>{
       userId: aggregatorAuthStore.getAggregatorInfo()?.userId
     }
   })
-
-
 }
 </script>
 
@@ -51,7 +49,7 @@ const addProduct = ()=>{
             <span class="material-icons-outlined !text-3xl">menu_open</span>
           </div>
           <div class="flex">
-            <div @click="addProduct" class="flex gap-2 btn btn-sm bg-main-400 text-main-950 text-cursor-pointer hover:bg-main-300">
+            <div @click="addProduct"  class="flex gap-2 btn btn-sm bg-main-400 text-main-950 text-cursor-pointer hover:bg-main-300">
               <span class="material-icons-outlined text-sm">add</span>
               <span class="hidden md:block">New product</span>
             </div>

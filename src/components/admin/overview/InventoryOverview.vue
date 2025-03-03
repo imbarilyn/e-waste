@@ -36,43 +36,23 @@ const columns = [
             </div>`
     }
   },
-  { data: 'name', title: 'Name' },
+  { data: 'name', title: 'Name'},
+  {data: null, title:'Aggregator',
+    render: (data: string, type: string, row: Product)=>{
+      return `${row.first_name} ${row.last_name}`
+    }
+  },
+  {
+    data:'store_name',
+    title: 'Store name'
+  },
   { data: 'regular_price', title: 'Price' },
-  // { data: 'short_description', title: 'Description'},
   { data: 'stock_quantity', title: 'Quantity'},
-  // { data: 'weight', title: 'Units'},
   { data: 'created_at', title: 'Date',
     render:(data: string, type: string, row: Product )=>{
       return moment(row.created_at).format('DD MMMM YYYY-hh:mm a')
     }
   },
-  {data: 'full_name', title:'Aggregator'},
-//   {
-//     data: null,
-//     title: 'Actions',
-//     orderable: false,
-//     searchable: false,
-//     render: (data: string, type:string, row: Product) =>{
-//       return `
-//         <div class="flex">
-//           <button id='view-btn' class=" btn btn-sm">
-//           <span class="material-icons-outlined text-conifer-500">fullscreen</span>
-// </button>
-//          <button id="resend-btn" class=" btn btn-sm">
-//           <span class="material-icons-outlined text-main-500">
-// edit
-// </span>
-// </button>
-//           <button id="resend-btn" class=" btn btn-sm">
-//           <span class="material-icons-outlined text-rose-500">
-// delete
-// </span>
-// </button>
-//
-//         </div>
-//       `
-//     }
-//   }
 ]
 
 const exceptedColumns = Array.from({ length: columns.length-2}, (v, k) => k+1)
