@@ -80,7 +80,17 @@ const adminLoginHandler = () => {
     adminAuthStore.adminLogin(loginAdminData)
         .then((res) =>{
           console.log('login response-admin', res)
-          if(res?.result === 'success'){
+          if(res?.result === 'fail'){
+            setTimeout(()=>{
+              isLoading.value = false
+              adminAuthStore.setIsAuthenticationError({
+                isError: true,
+                message: res?.message,
+                type: 'error'
+              })
+
+            }, 1500)
+          } else{
             setTimeout(()=>{
               isLoading.value = false
               adminTabStore.setActiveTab('Admin-Overview')
@@ -119,11 +129,24 @@ const adminLoginHandler = () => {
   } return
 }
 
+const closeBanner = () =>{
+  adminAuthStore.setIsAuthenticationError({
+    isError: false,
+    message: '',
+    type: 'success'
+  })
+}
 
 </script>
 
 <template>
   <div class="h-full w-full grid grid-cols-12 bg-main-300 md:bg-white">
+    <NotificationBanner
+        :message="adminAuthStore.isAuthenticationError.message"
+        :type="adminAuthStore.isAuthenticationError.type"
+        :is-open="adminAuthStore.isAuthenticationError.isError"
+        @closeNotificationBanner="closeBanner"
+    />
 
     <div
         class="bg-main-300  md:rounded-tr-2xl md:rounded-br-2xl  md:h-screen flex  items-center md:justify-center md:col-span-6 col-span-12">
