@@ -55,13 +55,13 @@ const handleTab = (tab: string) => {
         </div>
       </div>
       <!--                  profile-->
-      <div class="absolute bottom-0 px-4 pt-5 sm:px-6 pb-4 flex  gap-3">
+      <div class="absolute bottom-0 px-4 pt-5 sm:px-6 pb-4 flex  gap-0.5">
         <div>
           <span class="material-icons-round !text-4xl">account_circle</span>
         </div>
         <div class="flex flex-col">
-          <span>Smith Joe</span>
-          <span>smith@gmail.com</span>
+          <span>{{adminAuthStore.getAdminInfo()?.fullName}}</span>
+          <span class="text-sm">{{adminAuthStore.getAdminInfo()?.email}}</span>
         </div>
 
       </div>
@@ -115,13 +115,13 @@ const handleTab = (tab: string) => {
                       </div>
                     </div>
                     <!--                  profile-->
-                    <div class="absolute bottom-0 px-4 pt-5 sm:px-6 pb-4 flex  gap-3">
+                    <div class="absolute bottom-0 px-4 pt-5 sm:px-6 pb-4 flex  gap-0.5">
                       <div>
                         <span class="material-icons-round !text-4xl">account_circle</span>
                       </div>
                       <div class="flex flex-col">
-                        <span>Smith Joe</span>
-                        <span>smith@gmail.com</span>
+                        <span>{{adminAuthStore.getAdminInfo()?.fullName}}</span>
+                        <span class="text-xs">{{adminAuthStore.getAdminInfo()?.email}}</span>
                       </div>
 
                     </div>

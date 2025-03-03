@@ -34,7 +34,7 @@ const handleTab = (tab: string) => {
         <div class="flex justify-center gap-4 pb-3">
           <img src="/images/e-waste.png" alt="e-waste-mage" class="h-12 w-12">
         </div>
-        <p class="text-center">{{displayHour}} {{aggregatorAuthStore.getAggregatorInfo()?.fullName}}</p>
+        <p class="text-center">{{displayHour}} {{aggregatorAuthStore.getAggregatorInfo()?.firstName}}</p>
       </div>
       <div v-for="(tab, index) in aggregatorTabStore.getTabs"
            :key="index"
@@ -51,13 +51,13 @@ const handleTab = (tab: string) => {
         </div>
       </div>
       <!--                  profile-->
-      <div class="absolute bottom-0 px-4 pt-5 sm:px-6 pb-4 flex  gap-3">
+      <div class="absolute bottom-0 px-4 pt-5 sm:px-6 pb-4 flex gap-0.5">
         <div>
           <span class="material-icons-round !text-4xl">account_circle</span>
         </div>
         <div class="flex flex-col">
-          <span>{{aggregatorAuthStore.getAggregatorInfo()?.fullName}}</span>
-          <span>{{aggregatorAuthStore.getAggregatorInfo()?.email}}</span>
+          <span>{{aggregatorAuthStore.getAggregatorInfo()?.firstName}}</span>
+          <span class="text-sm">{{aggregatorAuthStore.getAggregatorInfo()?.email}}</span>
         </div>
 
       </div>
@@ -93,7 +93,7 @@ const handleTab = (tab: string) => {
                     <div class="flex justify-center gap-4 pb-3">
                       <img src="/images/e-waste.png" alt="e-waste-mage" class="h-12 w-12">
                     </div>
-                    <p class="text-center">{{displayHour}} {{aggregatorAuthStore.getAggregatorInfo()?.fullName}}</p>
+                    <p class="text-center">{{displayHour}} {{aggregatorAuthStore.getAggregatorInfo()?.firstName}}</p>
                     
                     <div v-for="(tab, index) in aggregatorTabStore.getTabs"
                          :key="index"
@@ -112,13 +112,13 @@ const handleTab = (tab: string) => {
                       </div>
                     </div>
                     <!--                  profile-->
-                    <div class="absolute bottom-0 px-4 pt-5 sm:px-6 pb-4 flex  gap-3">
+                    <div class="absolute bottom-0 px-4 pt-5 sm:px-6 pb-4 flex  gap-0.5">
                       <div>
                         <span class="material-icons-round !text-4xl">account_circle</span>
                       </div>
-                      <div class="flex flex-col ">
-                        <span>{{aggregatorAuthStore.getAggregatorInfo()?.fullName}}</span>
-                        <span class="text-sm">{{aggregatorAuthStore.getAggregatorInfo()?.email}}</span>
+                      <div class="flex flex-col w-56 ">
+                        <span>{{aggregatorAuthStore.getAggregatorInfo()?.firstName}}</span>
+                        <span class="text-xs">{{aggregatorAuthStore.getAggregatorInfo()?.email}}</span>
                       </div>
 
                     </div>
