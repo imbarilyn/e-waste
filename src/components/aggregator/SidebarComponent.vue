@@ -22,6 +22,19 @@ const handleTab = (tab: string) => {
   })
 }
 
+const openDialog = ref({
+  isOpen: false
+})
+const logout = ()=>{
+  openDialog.value.isOpen =true
+}
+
+const signOut = ()=>{
+  aggregatorAuthStore.logout()
+  router.push({name: 'aggregator-login'})
+}
+
+
 
 </script>
 
