@@ -12,6 +12,11 @@ import moment from 'moment'
 
 
 const adminAuthStore = useAdminAuthStore()
+interface Address {
+  city: string,
+  state: string,
+  street: string,
+}
 interface Portfolio {
   id: string,
   first_name: string,
