@@ -4,6 +4,88 @@
 import {useRouter} from "vue-router";
 
 const router = useRouter()
+const aggregatorAuthStore = useAggregatorAuthStore()
+const isLoading = ref(false)
+const forgotPassword = reactive({
+  email: ''
+})
+
+const emailValidator = (value: string) => {
+  if (!value) {
+    return 'Email is required'
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  if (!emailRegex.test(value)) {
+    return 'Email must be valid'
+  }
+
+  if (value.length > 50) {
+    return 'Email must be less than 50 characters'
+  }
+
+  return true
+}
+
+const{
+  value: email,
+  errorMessage: emailErrorMessage,
+  meta: emailMeta
+
+} = useField('email', emailValidator)
+
+watch(() => forgotPassword.email, () => {
+  email.value = forgotPassword.email
+})
+
+const everythingOk = computed(() => {
+  return emailMeta.validated && emailMeta.valid
+})
+
+const forgotPasswordHandler = () => {
+  if(!everythingOk.value){
+    return
+  }
+  else {
+    isLoading.value = true
+    aggregatorAuthStore.forgotPassword(forgotPassword.email)
+        .then((resp) => {
+          if(resp.result === 'success'){
+            setTimeout(()=>{
+              isLoading.value = false
+              showAlert({
+                type: 'success',
+                message: 'Password reset link has been sent to your email'
+              })
+            }, 1500)
+          }
+          else {
+            setTimeout(()=>{
+              isLoading.value = false
+              showAlert({
+                type: 'error',
+                message: resp.message
+              })
+            }, 1500)
+          }
+
+        })
+        .catch((err) => {
+          setTimeout(()=>{
+            isLoading.value = false
+            showAlert({
+              type: 'error',
+              message: 'An error occurred. Please try again'
+            })
+          }, 1500)
+
+        })
+  }
+
+}
+
+
 </script>
 
 <template>
@@ -42,7 +124,7 @@ const router = useRouter()
       >
         <div class="md:mt-5">
           <!-- Form -->
-          <form class="md:my-4 py-3 my-40">
+          <form class="md:my-4 py-3 my-40" @submit.prevent="forgotPasswordHandler">
             <div class="grid md:gap-y-4">
               <div class="flex flex-col md:space-y-1">
                 <div class="flex flex-col space-y-5">
