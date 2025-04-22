@@ -113,7 +113,8 @@ const routes = [
                     }
                 },
                 meta: {
-                    role: 'aggregator'
+                    role: 'aggregator',
+                    requiresAuth: true,
                 }
             },
             {
@@ -166,6 +167,21 @@ const routes = [
                 props: (route: RouteLocationNormalized) => {
                     return {
                         userId: route.params.userId
+                    }
+                },
+                meta: {
+                    role: 'aggregator',
+                    requiresAuth: true,
+                }
+            },
+            {
+                name: 'Aggregator-View-Product',
+                path: 'view-product/:userId/:productId',
+                component: () => import('@/components/aggregator/product/ViewProduct.vue'),
+                props: (route: RouteLocationNormalized)=>{
+                    return {
+                        userId: route.params.userId,
+                        productId: route.params.productId
                     }
                 },
                 meta: {
