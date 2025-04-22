@@ -129,6 +129,50 @@ $(document).ready(function() {
     select: true,
     responsive: true
   })
+
+  table.on('click', '#status-enable', function(){
+    isLoading.value= true
+    const aggregator = table.row($(this).closest('tr')).data();
+  if($(this).is(':checked')) {
+    console.log('enabled')
+    const payload = {
+      status: true,
+      aggregatorId: aggregator.id,
+    }
+    aggregatorAuthStore.changeDokanVendorStatus(payload)
+        .then((res) =>{
+          notificationStore.addNotification(res?.message, res?.result)
+
+        })
+        .catch(e=>{
+          console.log('fail')
+        })
+        .finally(()=>{
+          isLoading.value = false
+        })
+
+  }
+  else{
+    const payload = {
+      status: false,
+      aggregatorId: aggregator.id,
+    }
+    aggregatorAuthStore.changeDokanVendorStatus(payload)
+        .then((res) =>{
+         notificationStore.addNotification(res?.message, res?.result)
+
+        })
+        .catch(e=>{
+          notificationStore.addNotification('An error occurred please try again', 'error')
+        })
+        .finally(()=>{
+          isLoading.value = false
+        })
+
+    console.log('Disabled')
+  }
+
+  })
 })
 </script>
 
