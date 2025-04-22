@@ -3,6 +3,8 @@ import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from 
 import {useRouter} from "vue-router";
 import { useAdminTabStore, useAdminStore, useAdminAuthStore  } from "@/stores";
 import { displayHour} from "@/modules/getHour.ts";
+import DialogModal from "@/components/commonComponent/DialogModal.vue";
+import {ref} from "vue";
 
 
 const adminStore = useAdminStore()
@@ -134,6 +136,34 @@ const handleTab = (tab: string) => {
       </div>
     </Dialog>
   </TransitionRoot>
+
+  <teleport to="body">
+    <DialogModal :is-open="openDialog.isOpen"
+                 @close-modal="openDialog.isOpen=false">
+      <template #title>
+        <div class="flex justify-center">
+          <span class="material-icons-outlined !text-6xl"> logout </span>
+        </div>
+      </template>
+      <template #body>
+        <div class="flex justify-center">
+          <h1 class="text-xl font-bold">Oh no! You're leaving?</h1>
+        </div>
+        <div class="flex justify-center">
+          <p class="text-lg font-semibold">Are you sure?</p>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-center gap-8">
+          <button class="btn btn-sm btn-ghost text-white bg-main-500 hover:bg-main-600 " @click="signOut">Sign Out</button>
+          <button class="btn btn-sm bg-slate-200" @click="openDialog.isOpen=false">
+            Cancel
+          </button>
+        </div>
+      </template>
+
+    </DialogModal>
+  </teleport>
 </template>
 
 <style scoped>
