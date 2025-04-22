@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import {ref, computed, watch, onMounted} from 'vue'
 import {
   Combobox,
   ComboboxInput,
@@ -21,8 +21,7 @@ interface ComboboxProps {
 }
 
 const props = defineProps<ComboboxProps>()
-// let selected = ref(people[0])
-let selected = ref(props.prompt)
+let selected = ref()
 let query = ref('')
 
 let filteredOptions = computed(() =>
@@ -37,12 +36,23 @@ let filteredOptions = computed(() =>
 )
 
 const emits = defineEmits<{
-  (event: 'comboChoice', value: string): void
+  (event: 'comboChoice', value: ComboOptions): void
 }>()
 
 watch(()=>selected.value, (value)=>{
+  console.log(value)
   if(value){
-    emits('comboChoice', value)
+    const selectedOption = props.comboProps.find((option)=>{
+      return option.name === value
+    })
+    console.log(selectedOption)
+    if(selectedOption){
+      emits('comboChoice', {
+        id: selectedOption.id,
+        name: selectedOption.name
+      })
+    }
+
   }
 })
 
@@ -59,7 +69,7 @@ watch(()=>selected.value, (value)=>{
             class="relative w-full cursor-default overflow-hidden rounded-lg py-1.5 bg-white text-left shadow-md border border-none focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-main-300 sm:text-sm"
         >
           <ComboboxInput
-              class="w-full py-2 pl-3 pr-10 text-sm leading-5 text-main-950 focus:ring-0"
+              class="w-full py-2 pl-3 pr-10 text-sm leading-5  focus:ring-0"
               placeholder="Search..."
               @change="query = $event.target.value"
           />
