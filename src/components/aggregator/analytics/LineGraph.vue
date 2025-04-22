@@ -1,12 +1,22 @@
 <script setup lang="ts">
 
-import {ref, reactive, onMounted} from "vue";
+import {ref, reactive, onMounted, watch} from "vue";
 import type {Ref} from 'vue'
 import {Chart} from "chart.js/auto";
-const refLineGraph: Ref<HTMLCanvasElement | null> = ref<HTMLCanvasElement | null>(null)
-const lineGraphInstance: Ref<Chart<'line', number[], string> | null> = ref(null)
+import SalesTab from "@/components/aggregator/analytics/SalesTab.vue";
+import {useAggregatorAuthStore, useAggregatorStore} from "@/stores";
+import moment from "moment";
 
 
+
+export  interface SalesTab {
+  label: string
+  position: number
+  isActive: boolean
+}
+
+const dateMin = ref<string>('')
+const aggregatorStore = useAggregatorStore()
 interface LineGraph{
   labels: string[],
   datasets: [
