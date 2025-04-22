@@ -32,6 +32,10 @@ interface AdminToken {
     exp: string
 }
 
+interface AdminWordPressToken {
+    exp: number
+}
+
 interface AdminData {
     fullName: string
     userId: string
