@@ -2,20 +2,24 @@
 import { useAdminAuthStore } from "@/stores/adminAuthStore";
 import NotificationBanner from "@/components/commonComponent/NotificationBanner.vue";
 import {useAggregatorAuthStore} from "@/stores/aggregatorAuthStore.ts";
+import { onMounted } from "vue";
 
 
 const adminAuthStore = useAdminAuthStore()
-const aggregatedAuthStore = useAggregatorAuthStore()
+const aggregatorAuthStore = useAggregatorAuthStore()
+onMounted(()=>{
+  console.log('Here at the routerview', aggregatorAuthStore.isAuthenticationError)
+})
 </script>
 
 <template>
   <div class="relative">
-    <div class="">
-      <NotificationBanner :message="adminAuthStore.IsAuthenticationError.message || aggregatedAuthStore.IsAuthenticationError.message"
-                          :is-open=adminAuthStore.IsAuthenticationError.isError || aggregatedAuthStore.IsAuthenticationError.isError
-                          :type="adminAuthStore.IsAuthenticationError.type || aggregatedAuthStore.IsAuthenticationError.isError" />
+<!--    <div v-if="adminAuthStore.IsAuthenticationError.isError || aggregatorAuthStore.isAuthenticationError.isError">-->
+<!--      <NotificationBanner :message="adminAuthStore.IsAuthenticationError.message || aggregatorAuthStore.isAuthenticationError.message"-->
+<!--                          :is-open=adminAuthStore.IsAuthenticationError.isError || aggregatorAuthStore.isAuthenticationError.isError-->
+<!--                          :type="adminAuthStore.IsAuthenticationError.type || aggregatorAuthStore.isAuthenticationError.isError" />-->
 
-    </div>
+<!--    </div>-->
 
 
     <RouterView #default="{Component, route}">
