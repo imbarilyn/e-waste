@@ -207,6 +207,13 @@ const createAdminHandler = () => {
   }
 }
 
+const closeBanner = () =>{
+  adminAuthStore.setIsAuthenticationError({
+    isError: false,
+    message: '',
+    type: 'success'
+  })
+}
 
 
 </script>
