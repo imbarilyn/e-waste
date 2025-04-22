@@ -157,8 +157,9 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
 
     }
 
-    function setToken(token: string){
-        aggregatorToken.value = token
+    function setToken(token: {access_token: string, dokan_token: string}){
+        aggregatorToken.value = token.access_token
+        vendorDokanToken.value = token.dokan_token
         aggregatorLoggedIn.value = true
     }
 
