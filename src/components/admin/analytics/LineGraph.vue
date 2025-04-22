@@ -189,11 +189,14 @@ watch(dateMin, (newValue) => {
         renderChart()
       }
 
+    })
+  }
+}, {immediate: true})
 
 </script>
 
 <template>
-  <div class="">
+  <div class="p-4 flex flex-col ">
     <span class="md:text-2xl text-lg font-semibold">My sales</span>
     <div class="h-96">
       <SalesTab :record-tab="salesTab" @activeTab="activeTab"/>
