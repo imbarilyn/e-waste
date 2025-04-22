@@ -53,7 +53,8 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
     const adminData = useStorage('admin-data', '')
     const adminEverLoggedIn = ref(false)
     const getToken = computed(() => adminToken.value)
-    const IsAuthenticationError = ref<IsAuthenticationError>({
+    const getAdminWordpressToken = computed(() => adminWordpressToken.value)
+    const isAuthenticationError = ref<IsAuthenticationError>({
         isError: false,
         message: '',
         type: 'success'
@@ -61,7 +62,8 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
     const adminTokenValid = computed(() => {
         const expiry = moment.unix(Number(adminTokenExpiry.value)).utc()
         const now = moment().utc()
-        const isValid = adminToken.value && expiry.isAfter(now)
+        const wpExpiry = moment.unix(adminWordpressTokenExpiry.value).utc()
+        const isValid = adminToken.value && expiry.isAfter(now) && adminWordpressToken.value && wpExpiry.isAfter(now)
         if (!isValid) {
             logout()
         }
