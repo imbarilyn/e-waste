@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import LineGraph from "@/components/aggregator/analytics/LineGraph.vue";
-import DoughnutGraph from "@/components/aggregator/analytics/DoughnutGraph.vue";
+import LineGraph from "@/components/admin/analytics/LineGraph.vue";
+import DoughnutGraph from "@/components/admin/analytics/DoughnutGraph.vue";
 import PieChart from "@/components/aggregator/analytics/PieChart.vue";
-import BarGraph from "@/components/aggregator/analytics/BarGraph.vue";
+import BarGraph from "@/components/admin/analytics/BarGraph.vue";
 
 
 </script>
