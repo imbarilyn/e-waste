@@ -21,6 +21,37 @@ interface LineGraph{
   ]
 }
 
+const salesTab = [
+  {
+    label: 'Yesterday',
+    position: 1,
+    isActive: true,
+  },
+  {
+    label: 'Last 7 days',
+    position: 2,
+    isActive: false,
+  },
+  {
+    label: 'Last 30 days',
+    position: 3,
+    isActive: false,
+  },
+  {
+    label: 'Last 12 months',
+    position: 4,
+    isActive: false,
+  }
+]
+
+const refLineGraph: Ref<HTMLCanvasElement | null> = ref<HTMLCanvasElement | null>(null)
+const lineGraphInstance: Ref<Chart<'line', number[], string> | null> = ref(null)
+
+
+
+
+
+
 const lineData = reactive({
   labels: [] as string[],
   datasets: [
