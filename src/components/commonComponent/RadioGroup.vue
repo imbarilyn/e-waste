@@ -2,19 +2,24 @@
 import {ref, watch} from 'vue'
 import {RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption,} from '@headlessui/vue'
 
-interface MyRadioGroup {
+export  interface MyRadioGroup {
+  // id:number
+  // name: string
+  // color:  string
+  // icon: string
+  // description: string
   id:number
   name: string
-  color:  string
+  color: string
   icon: string
-  description: string
+  description?: string
 }
 
-interface WeightUnitProps {
-  weightUnit: MyRadioGroup []
+interface RadioProps {
+  radioProps: MyRadioGroup []
 }
 
-const props = defineProps<WeightUnitProps>()
+const props = defineProps<RadioProps>()
 const selected = ref()
 
 const emits = defineEmits<{
@@ -30,11 +35,11 @@ watch(() => selected.value, (newVal) => {
 <template>
   <div class="w-full py-3">
     <div class="mx-auto w-full">
-      <RadioGroup v-model="selected" :weightUnit="props.weightUnit">
+      <RadioGroup v-model="selected" :radioProps="props.radioProps">
         <RadioGroupLabel class="sr-only">Server Size</RadioGroupLabel>
-        <div class="space-y-0 grid grid-cols-12 gap-3">
+        <div class="space-y-0 grid grid-cols-6 gap-6">
           <RadioGroupOption
-              v-for="unit in props.weightUnit"
+              v-for="unit in props.radioProps"
               :key="unit.name"
               v-slot="{ active, checked }"
               :value="unit"
