@@ -6,9 +6,17 @@ import moment from "moment";
 import {jwtDecode} from "jwt-decode";
 import {useAdminAuthStore} from "@/stores/adminAuthStore.ts";
 
-
-interface  AggregatorPayload {
-    fullName: string
+interface Address {
+    street_1: string
+    street_2?: string
+    city: string
+    state: string
+    country: string
+    zip: string
+}
+export interface  CollectorPayload {
+    firstName: string
+    lastName: string
     email: string
     phoneNumber: string
     location: string
@@ -64,36 +72,37 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
     })
 
 
-    async function createAggregator (aggregatorPayload: AggregatorPayload){
-        const formData = new FormData()
+    async function createAggregator (aggregatorPayload: CollectorPayload){
         const adminAuthStore = useAdminAuthStore()
-        formData.append('full_name', aggregatorPayload.fullName)
-        formData.append('email', aggregatorPayload.email)
-        formData.append('phone_number', aggregatorPayload.phoneNumber)
-        formData.append('admin_id', aggregatorPayload.adminId)
-        formData.append('location', aggregatorPayload.location)
-
         try{
             const response = await fetch(`${BASE_URL}/auth/aggregator/create`, {
                 method: 'POST',
                 mode: 'cors',
-                body: formData,
                 headers: {
-                    Authorization: `Bearer ${adminAuthStore.getToken}`
-                }
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${adminAuthStore.getToken}`,
+
+                },
+                body: JSON.stringify({
+                    first_name: aggregatorPayload.firstName,
+                    last_name: aggregatorPayload.lastName,
+                    email: aggregatorPayload.email,
+                    phone_number: aggregatorPayload.phoneNumber,
+                    username: aggregatorPayload.username,
+                    admin_id: aggregatorPayload.adminId,
+                    address: aggregatorPayload.address,
+                    store_name: aggregatorPayload.storeName,
+                    wp_token: aggregatorPayload.wpToken,
+                })
             })
             const data = await response.json()
-            console.log('creating aggregator', data)
+            console.log(data)
             if (!response.ok){
-              console.log('failed to create aggregator', response)
               return {
                 result: 'fail',
                 message: 'Could not validate user, please try to login'
               }
             }
-
-
-            console.log('creating aggregator', data)
             return {
                 result: data.result,
                 message: data.message
