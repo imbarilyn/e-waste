@@ -85,13 +85,58 @@ onMounted(()=>{
   renderChart()
 })
 
+const activeTab = (value: SalesTab)=>{
+  console.log(value)
+  // const dateMin = moment().format()
+  if(value.label === 'Yesterday'){
+   dateMin.value = moment().subtract(1, 'days').format()
+    }
+  else if(value.label === 'Last 7 days'){
+    dateMin.value = moment().subtract(7, 'days').format()
+  }
+  else if(value.label === 'Last 30 days'){
+    dateMin.value = moment().subtract(30, 'days').format()
+  }
+  else if(value.label === 'Last 12 months'){
+    dateMin.value = moment().subtract(12, 'months').format()
+  }
+  console.log(dateMin.value)
+
+
+}
+const aggregatorAuthStore = useAggregatorAuthStore()
+
+watch(dateMin, (newValue) => {
+  console.log(newValue)
+  const dateMax = moment().format()
+  if (newValue) {
+    aggregatorStore.getSalesReportByDate(
+        {
+          dateMin: newValue,
+          dateMax: dateMax,
+          vendorId: aggregatorAuthStore.getAggregatorInfo()?.dokanId
+        }
+    ).then((response) => {
+      console.log('Line graph sales', response)
+      // lineData.labels = response.data.map((item: any) => item.date)
+      // lineData.datasets[0].data = response.data.map((item: any) => item.total_sales)
+      // renderChart()
+    })
+  }
+}, { immediate: true })
+
+
+
 
 </script>
 
 <template>
   <div class="">
-    <span class="md:text-2xl text-lg font-semibold">My sales</span>
+    <span class="md:text-2xl text-lg font-semibold">My sales Report</span>
     <div class="h-96">
+      <SalesTab  :record-tab="salesTab"  @activeTab="activeTab"/>
+
+
       <canvas ref="refLineGraph"></canvas>
     </div>
   </div>
