@@ -163,7 +163,7 @@ const routes = [
             {
                 name: 'Aggregator-Product',
                 path: 'new-product/:userId',
-                component: () => import('@/components/aggregator/createProduct/AddProduct.vue'),
+                component: () => import('@/components/aggregator/product/AddProduct.vue'),
                 props: (route: RouteLocationNormalized) => {
                     return {
                         userId: route.params.userId
