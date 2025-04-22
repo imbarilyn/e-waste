@@ -3,9 +3,13 @@ import InventoryDataTable from "@/components/aggregator/inventory/InventoryDataT
 import {useRouter} from "vue-router";
 import {useAggregatorTabStore} from "@/stores/aggregatorTabstore.ts";
 import InventoryOverview from "@/components/aggregator/overview/InventoryOverview.vue";
+import {onMounted, ref} from "vue";
+import {useStorage} from "@vueuse/core";
+import {useAggregatorStore} from "@/stores";
 
 const router = useRouter()
 const tabStore = useAggregatorTabStore()
+const aggregatorStore = useAggregatorStore()
 
 const handleVieMoreMaterial = ()=>{
   tabStore.setActiveTab('Aggregator-Inventory')
@@ -13,6 +17,46 @@ const handleVieMoreMaterial = ()=>{
     name: 'Aggregator-Inventory'
   })
 }
+
+const isSalesReportError = ref(false)
+const isProductReportError = ref(false)
+const summaryData = useStorage('summaryData', {
+  totalEarnings: 0,
+  accountBalance: 0,
+  totalOrders: 0,
+  publish: 0,
+  pending: 0,
+  totalProducts:0
+})
+onMounted(()=>{
+  aggregatorStore.getSalesReport()
+      .then(res =>{
+        console.log("sales report", res)
+        if(res?.data){
+          summaryData.value.totalEarnings = res?.data?.sales
+          summaryData.value.accountBalance = res?.data?.seller_balance
+          summaryData.value.totalOrders = res?.data?.orders_count['wc-completed']
+        }
+      })
+      .catch((e)=>{
+        console.log("error", e);
+        isSalesReportError.value = true
+      })
+
+  aggregatorStore.getProductSummary()
+      .then(res =>{
+        console.log("Product report", res)
+        if(res?.data){
+          summaryData.value.publish = res?.data?.post_counts.publish
+          summaryData.value.pending = res?.data?.post_counts.pending
+          summaryData.value.totalProducts = res?.data?.post_counts.total
+        }
+      })
+      .catch((e)=>{
+        console.log("error", e);
+        isProductReportError.value = true
+      })
+})
 </script>
 
 <template>
@@ -29,7 +73,7 @@ const handleVieMoreMaterial = ()=>{
         </div>
         <div class="flex ">
           <p class="!text-sm md:!text-lg">Kes.</p>
-          <span class="md:!text-xl text-sm font-semibold">10000</span>
+          <span class="md:!text-xl text-sm font-semibold">{{summaryData.totalEarnings}}</span>
         </div>
       </div>
       <!--      2nd div-->
@@ -42,7 +86,7 @@ const handleVieMoreMaterial = ()=>{
         </div>
         <div class="flex ">
           <!--          <p>Kes.</p>-->
-          <span class="md:!text-xl text-sm  font-semibold">200</span>
+          <span class="md:!text-xl text-sm  font-semibold">{{summaryData.totalOrders}}</span>
         </div>
       </div>
       <!--      3rd div-->
@@ -51,12 +95,12 @@ const handleVieMoreMaterial = ()=>{
           <span class="material-icons-outlined text-yellow-200  md:!text-xl !text-xs">settings_input_component</span>
         </div>
         <div>
-          <p class="md:!text-lg !text-sm">Items Sold</p>
-          <span class="md:!text-xl text-sm">Since 12 Feb 2025</span>
+          <p class="md:!text-lg !text-sm">Items Pending</p>
+<!--          <span class="md:!text-xl text-sm">Since 12 Feb 2025</span>-->
         </div>
         <div class="flex ">
           <!--          <p>Kes.</p>-->
-          <span class="md:!text-xl text-sm font-semibold">200</span>
+          <span class="md:!text-xl text-sm font-semibold">{{summaryData.pending}}</span>
         </div>
       </div>
 
@@ -71,26 +115,26 @@ const handleVieMoreMaterial = ()=>{
         </div>
         <div class="flex ">
           <!--          <p>Kes.</p>-->
-          <span class="md:!text-lg !text-sm font-semibold">200</span>
+          <span class="md:!text-lg !text-sm font-semibold">{{summaryData.publish}}</span>
         </div>
       </div>
     </div>
 <!--    bottom section-->
     <div>
       <div>
-        <p class="!text-2xl font-semibold pb-4">Inventory section</p>
+        <p class="!text-2xl font-semibold pb-4">Pending Products</p>
         <div>
           <InventoryOverview />
         </div>
-        <div class="flex justify-end pt-4">
-          <button
-              @click="handleVieMoreMaterial"
-              class="btn btn-sm bg-main-400 text-main-950 text-cursor-pointer hover:bg-main-300">
-            <span>View more</span>
-            <span class="material-icons-outlined">east</span>
+<!--        <div class="flex justify-end pt-4">-->
+<!--          <button-->
+<!--              @click="handleVieMoreMaterial"-->
+<!--              class="btn btn-sm bg-main-400 text-main-950 text-cursor-pointer hover:bg-main-300">-->
+<!--            <span>View more</span>-->
+<!--            <span class="material-icons-outlined">east</span>-->
 
-          </button>
-        </div>
+<!--          </button>-->
+<!--        </div>-->
 
       </div>
       <div>
