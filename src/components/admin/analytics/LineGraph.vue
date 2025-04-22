@@ -110,11 +110,16 @@ const lineOptions = {
   },
 }
 
-const renderChart  = async ()=> {
+const renderChart = async () => {
+  console.log('Rendering the line graph')
+
   if (lineGraphInstance.value) {
+    console.log("Destroying the line graph instance")
     lineGraphInstance.value.destroy()
-  } else {
+  }
+
     if (refLineGraph.value) {
+      console.log("Rendering the line graph in the ref")
       lineGraphInstance.value = new Chart(
           refLineGraph.value as HTMLCanvasElement,
           {
@@ -123,7 +128,20 @@ const renderChart  = async ()=> {
             options: lineOptions
           }
       )
-    }
+
+  }
+}
+
+const activeTab = (value: SalesTab) => {
+  selectedPeriod.value = value.label
+  if (value.label === 'Yesterday') {
+    dateMin.value = moment().subtract(1, 'days').format('YYYY-MM-DD')
+  } else if (value.label === 'Last 7 days') {
+    dateMin.value = moment().subtract(1, 'week').format('YYYY-MM-DD')
+  } else if (value.label === 'Last 30 days') {
+    dateMin.value = moment().subtract(1, 'month').format('YYYY-MM-DD')
+  } else if (value.label === 'Last 12 months') {
+    dateMin.value = moment().subtract(1, 'year').format('YYYY-MM-DD')
   }
 }
 
