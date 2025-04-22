@@ -42,6 +42,12 @@ interface AdminData {
     email: string
 }
 
+export interface ResetPasswordPayload {
+    password: string,
+    confirmPassword: string
+    resetToken: string
+}
+
 const BASE_URL = import.meta.env.VITE_BASE_URL as string
 
 export const useAdminAuthStore = defineStore('adminAuthStore', () => {
