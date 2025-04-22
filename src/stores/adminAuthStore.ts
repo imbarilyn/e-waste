@@ -88,7 +88,7 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
         try {
             const response = await fetch(`${BASE_URL}/auth/admin/`, {
                 method: 'POST',
-                mode: 'cors',
+                // mode: 'no-cors',
                 body: formData
             })
             if (!response.ok) {
@@ -135,9 +135,12 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
                 const data = await response.json()
                 console.log('jwt token---', data)
                 if (data) {
-                    setToken(data.access_token)
+                    setToken(data)
                     adminEverLoggedIn.value = true
-                    return await decodeToken(data.access_token)
+                    return(
+                        await decodeToken(data.access_token, data.wp_token)
+
+                    )
                 } else {
                     return {
                         result: 'fail',
@@ -153,38 +156,83 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
         }
     }
 
-    // async function getAggregators(adminId: string){
-    //     try{
-    //         const response = await fetch(`${BASE_URL}/admin/get-aggregators/${adminId}`, {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 Authorization: `Bearer ${adminToken.value}`
-    //             }
-    //         })
-    //         if(!response.ok){
-    //             return {
-    //                 result: 'fail',
-    //                 message: 'Failed to get aggregators'
-    //             }
-    //         }
-    //         const data = await response.json()
-    //         return {
-    //             result: 'success',
-    //             message: 'Aggregators retrieved successfully'
-    //         }
-    //     }
-    //
-    // }
+    async function forgotPassword(email: string) {
+        console.log('forgot password', email)
+    try {
+        const response = await fetch(`${BASE_URL}/auth/admin/forgot-password`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email
+            })
+        })
+        if(!response.ok){
+            return {
+                result: 'fail',
+                message: 'Could not reset password, please try again'
+            }
+        }
+        const res = await response.json()
+        return {
+            result: 'success',
+            message: res.message
+        }
+    }
+    catch(error){
+        return {
+            result: 'fail',
+            message: 'Could not reset password, please try again'
+        }
+    }
+    }
 
-    async function decodeToken(token:string) {
-        const decode: AdminToken = jwtDecode((token))
+    async function resetPassword(resetPasswordPayload:  ResetPasswordPayload ){
+        try {
+            const response = await fetch(`${BASE_URL}/auth/admin/reset-password`, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(resetPasswordPayload)
+
+            })
+
+            if(!response.ok){
+                return {
+                    result: 'fail',
+                    message: 'Could not reset password, please try again'
+                }
+            }
+            const res = await response.json()
+            return {
+                result: 'success',
+                message: res.message
+            }
+        }
+        catch(error){
+            return {
+                result: 'fail',
+                message: 'Could not reset password, please try again'
+            }
+        }
+    }
+
+
+
+    async function decodeToken(token:string, wp_token: string) {
+        const decode: AdminToken = jwtDecode(token)
+        const wpDecode: AdminWordPressToken = jwtDecode(wp_token)
         setAdminData({
             fullName: decode.sub,
             userId: decode.user_id,
             email: decode.email,
         })
         adminTokenExpiry.value = decode.exp
+        adminWordpressTokenExpiry.value = wpDecode.exp
         return {
             result: 'success',
             message: 'Amin Logged in successfully'
@@ -197,9 +245,11 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
         adminLoggedIn.value = true
     }
 
-    function setToken(token: string) {
+    function setToken(data: {access_token: string, wp_token: string}) {
         try {
-            adminToken.value = token
+            adminToken.value = data.access_token
+            adminWordpressToken.value = data.wp_token
+
         } catch (error) {
             console.log('failed to set token', error)
             return
@@ -218,7 +268,7 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
 
 
     const setIsAuthenticationError = (value: IsAuthenticationError) => {
-        IsAuthenticationError.value = {...value}
+        isAuthenticationError.value = {...value}
     }
 
 
@@ -230,18 +280,22 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
 
     return {
         adminToken,
+        adminWordpressToken,
         adminLoggedIn,
         adminTokenExpiry,
         adminData,
         adminEverLoggedIn,
         adminTokenValid,
         setIsAuthenticationError,
-        IsAuthenticationError,
+        isAuthenticationError,
         createAdmin,
         logout,
         adminLogin,
         getAdminInfo,
-        getToken
+        getToken,
+        forgotPassword,
+        resetPassword,
+        getAdminWordpressToken
     }
 
 })
