@@ -6,27 +6,50 @@ import 'datatables.net-select'
 import 'datatables.net-buttons-dt'
 import 'datatables.net-buttons/js/buttons.html5.js'
 import 'datatables.net-buttons/js/buttons.print.js'
-import {ref, watch} from "vue";
-import {type Product, useAdminAuthStore} from "@/stores";
+import {onMounted, ref, watch} from "vue";
+import {type Product, useAdminAuthStore, useAdminStore} from "@/stores";
 import moment from "moment/moment";
+import { type DataTableAjaxData} from "@/components/aggregator/inventory/InventoryDataTable.vue";
+import DialogModal from "@/components/commonComponent/DialogModal.vue";
 
 
 // const  BASE_URL = 'http://localhost:3000'
 const BASE_URL = import.meta.env.VITE_BASE_URL
 const material_table_el = ref<JQuery<HTMLElement> | null>(null)
 const adminAuthStore = useAdminAuthStore()
+const adminStore = useAdminStore()
 const selectedProduct = ref(false)
+const total = ref<string>('')
 
+export interface PublishProduct {
+  id: number
+  name: string
+  vendorName: string
+}
+const emits = defineEmits<{
+  (event: 'confirmPublish', value: PublishProduct): void
+}>()
+// watch(()=>total.value, (value)=>{
+//   if(value){
+//     console.log("Datatables side", value)
+//     emits('ShowTotalEntries', value)
+//   }
+// })
 watch(()=>selectedProduct.value, (val)=>{
   console.log('selectedProduct', val)
 })
-console.log()
+
+
+
+// onMounted(()=>{
+//   emits('ShowTotalEntries', total.value)
+// })
 
 const columns = [
   {data: null, title: '',
     render: (data: string, type: string, row: Product) =>{
     const selectedProduct = ref(true)
-      console.log('selectedProduct', selectedProduct.value)
+      // console.log('selectedProduct', selectedProduct.value)
     return `<div class="flex">
                 <input
                 v-model="selectedProduct"
@@ -36,39 +59,97 @@ const columns = [
             </div>`
     }
   },
-  { data: 'name', title: 'Name'},
-  {data: null, title:'Aggregator',
-    render: (data: string, type: string, row: Product)=>{
-      return `${row.first_name} ${row.last_name}`
+  { data: 'name', title: 'Product'},
+  {data: 'categories[0].name', title: 'Category'},
+  {
+    data:'store.name',
+    title: 'Vendor'
+  },
+  {
+    data:'store.shop_name',
+    title: 'Store'
+  },
+  {data: 'sale_price', title: 'Sale price'},
+  { data: 'regular_price', title: 'Regular price' },
+  { data: 'stock_quantity', title: 'Quantity'},
+  { data: 'date_modified', title: 'Creation date',
+    render:(data: string, type: string, row: Product )=>{
+      return moment(row.date_modified).format('DD MMMM YYYY-hh:mm a')
     }
   },
   {
-    data:'store_name',
-    title: 'Store name'
-  },
-  { data: 'regular_price', title: 'Price' },
-  { data: 'stock_quantity', title: 'Quantity'},
-  { data: 'created_at', title: 'Date',
-    render:(data: string, type: string, row: Product )=>{
-      return moment(row.created_at).format('DD MMMM YYYY-hh:mm a')
+    data: 'status', title: 'Status',
+    render: (data: string, type: string, row:  Record<string, number | string>)=>{
+      if(row.status === 'publish') {
+        return `<span class="bg-conifer-600 text-white rounded-lg px-2 py-1.5">published</span>`
+      } else{
+        return `<span class="bg-yellow-600 text-white rounded-lg px-2 py-1.5">pending</span>`
+      }
     }
   },
+  {
+    data: null, title: 'Publish',
+    render: (data: string, type: string, row:  Record<any, string | number>)=>{
+      const isChecked = row.status === 'publish' ? 'checked' : ''
+      return `<div class="flex">
+<!--<input type="checkbox"  id='status-enable' class="toggle toggle-info" ${isChecked} />-->
+<input type="checkbox" id="enable-publish" class="toggle border-slate-300 bg-slate-300 checked:bg-conifer-500 checked:text-main-400 checked:border-conifer-500 " ${isChecked}/>
+
+</div>`
+    }
+  }
 ]
 
 const exceptedColumns = Array.from({ length: columns.length-2}, (v, k) => k+1)
 // const acceptedColumns = [0, 1, 4, 5]
 
 $(document).ready(function() {
-  material_table_el.value = $('#myTable');
 
-  material_table_el.value?.DataTable({
+  // material_table_el.value = $('#myTable');
+
+  const table = $('#myTable').DataTable({
     columns: columns,
-    ajax: {
-      url: `${BASE_URL}/admin/get-products/${adminAuthStore.getAdminInfo()?.userId}/?limit=5&offset=0&all_products=0`,
-      dataSrc: (json) => {
-        console.log('data', json)
-        return json;
-      }
+    processing: true,
+    serverSide: true,
+    ajax: function (data, callback, settings){
+      const ajaxData = data as DataTableAjaxData
+      let searchValue = ajaxData.search.value
+      let page = Math.floor(settings._iDisplayStart / settings._iDisplayLength) + 1
+      $.ajax({
+        url: `https://recommerce.mzawadi.com/wp-json/wc/v3/products`,
+        headers: {
+          'Authorization': `Bearer ${adminAuthStore.getAdminWordpressToken}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        data: {
+          per_page:  settings._iDisplayLength,
+          page: page,
+          search: searchValue,
+          status: 'pending'
+        },
+        type: 'GET',
+        success: function (response, textStatus, jqXHR) {
+          console.log('response', response)
+          total.value = jqXHR.getResponseHeader('X-WP-Total') as string
+          console.log('total pending', typeof (jqXHR.getResponseHeader('X-WP-Total')))
+          callback({
+            draw: ajaxData.draw,
+            recordsTotal: jqXHR.getResponseHeader('X-WP-Total'),
+            recordsFiltered: jqXHR.getResponseHeader('X-WP-Total'),
+            data: response
+          })
+        },
+        error: function(errorThrown, textStatus, jqXHR){
+          callback({
+            draw: ajaxData.draw,
+            recordsTotal: 0,
+            recordsFiltered: 0,
+            data: [],
+            error: 'Failed to load data, please try again'
+          })
+        }
+      })
     },
     dom: '<"flex items-center justify-between"<"w-1/3"l><"w-1/3 text-center"B><"w-1/3 text-right"f>><"mt-8"rt><"flex justify-between pt-4"<"w-1/2"i><"flex justify-end w-1/2"p>>',
     buttons: [
@@ -124,11 +205,27 @@ $(document).ready(function() {
       }
     },
     scrollX: true,
-    paging: false,
+    paging: true,
     // select: true,
     responsive: true
   })
+
+  table.on('click', '#enable-publish', function(){
+    const row = table.row($(this).closest('tr')).data()
+    console.log("In the datatable publishing", row)
+    emits('confirmPublish', {
+      id: row.id,
+      name: row.name,
+      vendorName: row.store.name
+    })
+  })
 })
+
+// const publishHandler = ()=>{
+//   adminStore.publishProduct()
+//
+//
+// }
 
 </script>
 
@@ -148,7 +245,6 @@ $(document).ready(function() {
       </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>

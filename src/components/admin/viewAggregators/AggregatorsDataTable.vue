@@ -29,7 +29,9 @@ interface Result {
 
 // const  BASE_URL = 'http://localhost:3000'
 const BASE_URL = import.meta.env.VITE_BASE_URL
-const material_table_el = ref<JQuery<HTMLElement> | null>(null)
+const aggregatorAuthStore = useAggregatorAuthStore()
+const notificationStore = useNotificationsStore()
+const isLoading = ref(false)
 const portfolioData = ref<Portfolio | null>(null)
 const columns = [
   {data: null, title: '',
