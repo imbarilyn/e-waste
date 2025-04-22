@@ -92,7 +92,8 @@ onMounted(()=>{
   <div class="">
     <span class="md:text-2xl text-lg font-semibold">My sales</span>
     <div class="h-96">
-      <canvas ref="refLineGraph"></canvas>
+      <SalesTab :record-tab="salesTab" @activeTab="activeTab"/>
+      <canvas ref="refLineGraph" height=""></canvas>
     </div>
   </div>
 
