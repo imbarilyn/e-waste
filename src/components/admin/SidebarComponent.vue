@@ -26,7 +26,17 @@ const handleTab = (tab: string) => {
   console.log(adminTabStore.getTabs)
 }
 
+const openDialog = ref({
+  isOpen: false
+})
+const logout = ()=>{
+  openDialog.value.isOpen =true
+}
 
+const signOut = ()=>{
+  adminAuthStore.logout()
+  router.push({name: 'admin-login'})
+}
 
 
 </script>
@@ -64,6 +74,9 @@ const handleTab = (tab: string) => {
         <div class="flex flex-col">
           <span>{{adminAuthStore.getAdminInfo()?.fullName}}</span>
           <span class="text-sm">{{adminAuthStore.getAdminInfo()?.email}}</span>
+        </div>
+        <div  class="cursor-pointer btn btn-sm rounded-full w-10 h-10" @click="logout">
+          <span class="material-icons-outlined">logout</span>
         </div>
 
       </div>
@@ -124,6 +137,9 @@ const handleTab = (tab: string) => {
                       <div class="flex flex-col">
                         <span>{{adminAuthStore.getAdminInfo()?.fullName}}</span>
                         <span class="text-xs">{{adminAuthStore.getAdminInfo()?.email}}</span>
+                      </div>
+                      <div  class="cursor-pointer btn btn-sm rounded-full w-10 h-10" @click="logout">
+                        <span class="material-icons-outlined">logout</span>
                       </div>
 
                     </div>
