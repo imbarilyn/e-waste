@@ -7,8 +7,9 @@ import 'datatables.net-buttons-dt'
 import 'datatables.net-buttons/js/buttons.html5.js'
 import 'datatables.net-buttons/js/buttons.print.js'
 import {ref} from "vue";
-import {useAdminAuthStore} from "@/stores";
+import {useAdminAuthStore, useAggregatorAuthStore, useNotificationsStore} from "@/stores";
 import moment from 'moment'
+import type {DataTableAjaxData} from "@/components/aggregator/inventory/InventoryDataTable.vue";
 
 
 const adminAuthStore = useAdminAuthStore()
@@ -193,26 +194,27 @@ $(document).ready(function() {
       }
     ],
 
-    columnDefs: [
-      {
-        targets: -1,
-        className: 'dt-justify'
-      },
-      {
-        searchable: true,
-        targets: [0, 1, 2, 3]
-      }
-    ],
-    initComplete: function () {
-      this.api().columns().every(function () {
-        var column = this;
-        var input = document.createElement("input");
-        $(input).appendTo($(column.footer()).empty())
-          .on('keyup', function () {
-            column.search($(this).val(), false, false, true).draw();
-          });
-      });
-    },
+
+    // columnDefs: [
+    //   {
+    //     targets: -1,
+    //     className: 'dt-justify'
+    //   },
+    //   {
+    //     searchable: true,
+    //     targets: [0, 1, 2, 3]
+    //   }
+    // ],
+    // initComplete: function () {
+    //   this.api().columns().every(function () {
+    //     var column = this;
+    //     var input = document.createElement("input");
+    //     $(input).appendTo($(column.footer()).empty())
+    //       .on('keyup', function () {
+    //         column.search($(this).val(), false, false, true).draw();
+    //       });
+    //   });
+    // },
     // for page length
     layout: {
       // topStart: null,
@@ -275,7 +277,7 @@ $(document).ready(function() {
 
 <template>
 
-  <div>
+  <div class="relative h-screen">
     <div class="min-w-80  p-8 shadow-2xl rounded-2xl border border-1 ">
       <div>
         <table id="myTable" class="display stripe hover compact">
