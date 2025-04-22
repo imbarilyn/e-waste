@@ -67,15 +67,22 @@ const signOut = ()=>{
         </div>
       </div>
       <!--                  profile-->
-      <div class="absolute bottom-0 px-4 pt-5 sm:px-6 pb-4 flex gap-0.5">
-        <div>
-          <span class="material-icons-round !text-4xl">account_circle</span>
+      <div class="absolute bottom-0 px-4 space-y-3 pt-5 sm:px-6 pb-4 flex flex-col gap-0.5">
+<!--        <div  class="cursor-pointer" @click="logout">-->
+<!--          <span>Logout</span>-->
+<!--        </div>-->
+        <div class="flex gap-2">
+          <div>
+            <span class="material-icons-round !text-4xl">account_circle</span>
+          </div>
+          <div class="flex flex-col">
+            <span>{{aggregatorAuthStore.getAggregatorInfo()?.firstName}}</span>
+            <span class="text-sm">{{aggregatorAuthStore.getAggregatorInfo()?.email}}</span>
+          </div>
+          <div  class="cursor-pointer btn btn-sm rounded-full w-10 h-10" @click="logout">
+            <span class="material-icons-outlined">logout</span>
+          </div>
         </div>
-        <div class="flex flex-col">
-          <span>{{aggregatorAuthStore.getAggregatorInfo()?.firstName}}</span>
-          <span class="text-sm">{{aggregatorAuthStore.getAggregatorInfo()?.email}}</span>
-        </div>
-
       </div>
     </div>
   </div>
@@ -128,15 +135,19 @@ const signOut = ()=>{
                       </div>
                     </div>
                     <!--                  profile-->
-                    <div class="absolute bottom-0 px-4 pt-5 sm:px-6 pb-4 flex  gap-0.5">
-                      <div>
-                        <span class="material-icons-round !text-4xl">account_circle</span>
+                    <div class="absolute bottom-0 px-4 space-y-3 pt-5 sm:px-6 pb-4 flex flex-col gap-0.5">
+                      <div class="flex">
+                        <div>
+                          <span class="material-icons-round !text-4xl">account_circle</span>
+                        </div>
+                        <div class="flex flex-col">
+                          <span>{{aggregatorAuthStore.getAggregatorInfo()?.firstName}}</span>
+                          <span class="text-sm">{{aggregatorAuthStore.getAggregatorInfo()?.email}}</span>
+                        </div>
+                        <div  class="cursor-pointer btn btn-sm rounded-full w-10 h-10" @click="logout">
+                          <span class="material-icons-outlined">logout</span>
+                        </div>
                       </div>
-                      <div class="flex flex-col w-56 ">
-                        <span>{{aggregatorAuthStore.getAggregatorInfo()?.firstName}}</span>
-                        <span class="text-xs">{{aggregatorAuthStore.getAggregatorInfo()?.email}}</span>
-                      </div>
-
                     </div>
                   </div>
                 </div>
