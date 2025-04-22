@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {ref, reactive, onMounted} from "vue";
+import {ref, reactive, onMounted, watch} from "vue";
 import type {Ref} from 'vue'
 import {Chart} from "chart.js/auto";
 import SalesTab from "@/components/admin/analytics/SalesTab.vue";
@@ -27,7 +27,33 @@ interface Totals {
 
 const refLineGraph: Ref<HTMLCanvasElement | null> = ref<HTMLCanvasElement | null>(null)
 const lineGraphInstance: Ref<Chart<'line', number[], string> | null> = ref(null)
+const adminStore = useAdminStore()
+const dateMin = ref<string>('')
+const selectedPeriod = ref<string>('')
 
+
+const salesTab = [
+  {
+    label: 'Yesterday',
+    position: 1,
+    isActive: true,
+  },
+  {
+    label: 'Last 7 days',
+    position: 2,
+    isActive: false,
+  },
+  {
+    label: 'Last 30 days',
+    position: 3,
+    isActive: false,
+  },
+  {
+    label: 'Last 12 months',
+    position: 4,
+    isActive: false,
+  }
+] as SalesTab[]
 
 interface LineGraph{
   labels: string[],
