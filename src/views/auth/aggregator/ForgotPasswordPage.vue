@@ -163,8 +163,8 @@ const forgotPasswordHandler = () => {
 
                   <div class="w-full">
                     <button class="btn w-full bg-main-500 hover:bg-main-700" type="submit">
-                      <!--                      <span class="loading loading-spinner loading-md text-white"></span>-->
-                      <span class="text-white text-lg">Submit</span>
+                      <span v-if="isLoading" class="loading loading-spinner loading-md text-white"></span>
+                      <span v-else class="text-white text-lg">Submit</span>
                     </button>
                   </div>
                   <div class="">
