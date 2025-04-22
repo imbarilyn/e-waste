@@ -26,13 +26,61 @@ const BASE_URL = import.meta.env.VITE_BASE_URL
 const material_table_el = ref<JQuery<HTMLElement> | null>(null)
 const portfolioData = ref<Portfolio | null>(null)
 const columns = [
-  { data: 'full_name', title: 'Full name' },
+  {data: null, title: '',
+    render: (data: string, type: string, row: Record<any, string | number>) =>{
+      // console.log('selectedProduct', selectedProduct.value)
+      return `<div class="flex">
+                <input
+                type="checkbox" class="shrink-0 w-4 h-4 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="checkbox">
+            </div>`
+    }
+  },
+  { data: null, title: 'Aggregator',
+    render: (data: string, type: string, row:  Record<any, string | number>)=>{
+    console.log(row)
+      return `${row.first_name} ${row.last_name}`
+    }
+  },
   { data: 'email', title: 'Email' },
   { data: 'phone_number', title: 'Phone number'},
-  { data: 'location', title: 'Location'},
+  {data: 'store_name', title: 'Store name'},
+  {
+    data: 'address', title: 'City',
+    render: (data: string, type: string, row: Record<any, string | number>) => {
+      try {
+        let streetAddress = JSON.parse(row.address as string)
+        return streetAddress.city || 'No address'
+      } catch (e) {
+        return 'No address'
+      }
+    }
+  },
+  {data: 'address', title: 'Street',
+    render:(data: string, type: string, row:  Record<any, string | number>)=>{
+  try {
+    let streetAddress = JSON.parse(row.address as string)
+    return streetAddress.street_1 || 'No address'
+  } catch (e) {
+    return 'No address'
+  }
+
+  }
+  },
+
   { data: 'created_at', title: 'Created at',
-    render: function(data: string, type:string, row: Portfolio){
+    render: function(data: string, type:string, row:  Record<any, string | number>){
     return moment(row.created_at, 'YYYY-MM-DD').format('DD MMMM YYYY')
+    },
+  },
+  {
+    data: null, title: 'Status',
+    render: (data: string, type: string, row:  Record<any, string | number>)=>{
+      const isChecked = row.status === 'enabled' ? 'checked' : ''
+      return `<div class="flex">
+<!--<input type="checkbox"  id='status-enable' class="toggle toggle-info" ${isChecked} />-->
+<input type="checkbox" id="status-enable" class="toggle border-slate-300 bg-slate-300 checked:bg-conifer-500 checked:text-main-400 checked:border-conifer-500 " ${isChecked}/>
+
+</div>`
     }
   }
 ]
