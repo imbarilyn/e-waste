@@ -7,3 +7,7 @@ export * from './adminStore.ts';
 
 export * from './aggregatorAuthStore.ts'
 export * from './adminAuthStore.ts'
+
+export * from './notificationStore.ts'
+
+export * from './productTabStore.ts'
