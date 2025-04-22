@@ -14,11 +14,17 @@ import moment from 'moment'
 const adminAuthStore = useAdminAuthStore()
 interface Portfolio {
   id: string,
-  full_name: string,
+  first_name: string,
+  last_name: string,
   email: string,
   phone_number: number,
-  location: number,
+  address: string,
   created_at: string,
+}
+
+interface Result {
+  result: string
+  message: string
 }
 
 // const  BASE_URL = 'http://localhost:3000'
@@ -84,12 +90,9 @@ const columns = [
     }
   }
 ]
-
 const exceptedColumns = Array.from({ length: columns.length-1}, (v, k) => k)
 
 $(document).ready(function() {
-  material_table_el.value = $('#myTable');
-
   const table = $('#myTable').DataTable({
     columns: columns,
     processing: true,
