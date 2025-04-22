@@ -145,11 +145,49 @@ const activeTab = (value: SalesTab) => {
   }
 }
 
-onMounted(()=>{
-  lineData.datasets[0].data = [10, 23, 13, 65, 54, 61, 74, 22, 91, 100]
-  lineData.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']
-  renderChart()
-})
+
+watch(dateMin, (newValue) => {
+
+  console.log(newValue)
+  const dateMax = moment().format('YYYY-MM-DD')
+  if (newValue) {
+    adminStore.getSalesReportByDate(
+        {
+          dateMin: newValue,
+          dateMax: dateMax,
+        }
+    ).then((response) => {
+      if(response?.result === 'success'){
+        console.log(selectedPeriod.value)
+        lineData.labels = []
+        lineData.datasets[0].data = []
+        const totals = response.data[0].totals as Totals
+        for(const [date, values] of Object.entries(totals)){
+          // console.log(moment(date).format('dddd'))
+          lineData.datasets[0].data.push(Math.round(values.sales))
+          // lineData.datasets[0].data = [10, 100]
+          console.log('Values', values.sales)
+          if(selectedPeriod.value === 'Last 7 days') {
+            console.log('Here in the last 7 days', moment(date).format('dddd'))
+            lineData.labels.push(moment(date).format('dddd'))
+          }
+          else if(selectedPeriod.value === 'Yesterday') {
+            lineData.labels = ['Yesterday', 'Today']
+          }
+          else if(selectedPeriod.value === 'Last 30 days'){
+            console.log('Here in the last 30 days', moment(date).format('Do'))
+            lineData.labels.push(moment(date).format('Do'))
+          }
+          else if(selectedPeriod.value === 'Last 12 months'){
+            console.log('Here in the Last 12 months')
+            console.log(moment(date).format('MMMM'))
+            lineData.labels.push(moment(date).format('MMMM'))
+          }
+
+        }
+        console.log(lineData.labels)
+        renderChart()
+      }
 
 
 </script>
