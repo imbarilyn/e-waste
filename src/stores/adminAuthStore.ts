@@ -48,6 +48,8 @@ export const useAdminAuthStore = defineStore('adminAuthStore', () => {
     const adminToken = useStorage('admin-token', '')
     const adminLoggedIn = ref(false)
     const adminTokenExpiry = useStorage('admin-token-expiry', '')
+    const adminWordpressToken = useStorage('admin-wp-token', '')
+    const adminWordpressTokenExpiry = useStorage('admin-wp-expiry', 0 )
     const adminData = useStorage('admin-data', '')
     const adminEverLoggedIn = ref(false)
     const getToken = computed(() => adminToken.value)
