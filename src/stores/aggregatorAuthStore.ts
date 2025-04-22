@@ -4,7 +4,8 @@ import {ref} from "vue";
 import {computed} from "vue";
 import moment from "moment";
 import {jwtDecode} from "jwt-decode";
-import {useAdminAuthStore} from "@/stores/adminAuthStore.ts";
+import {useAdminAuthStore} from "@/stores";
+import {type ResetPasswordPayload} from "@/stores";
 
 interface Address {
     street_1: string
@@ -19,8 +20,15 @@ export interface  CollectorPayload {
     lastName: string
     email: string
     phoneNumber: string
-    location: string
+    username: string
+    address: Address
     adminId: string
+    storeName: string
+    wpToken: string
+}
+
+interface VendorWordPressToken {
+    exp: number
 }
 
 interface  AggregatorLoginPayload {
@@ -33,18 +41,26 @@ interface AggregatorToken {
     user_id: string
     email: string
     exp: string
+    dokan_id: string
 }
 
 interface AggregatorData {
-    fullName: string
+    firstName: string
     email: string,
     userId: string,
+    dokanId: string
+
 }
 
 interface IsAuthenticationError {
     isError: boolean
     message: string
     type: 'error' | 'warning' | 'info' | 'success'
+}
+
+interface DokanVendorStatus {
+    status: boolean
+    aggregatorId: string
 }
 
 const BASE_URL = import.meta.env.VITE_BASE_URL as string
@@ -54,9 +70,12 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
     const aggregatorLoggedIn = ref(false)
     const aggregatorTokenExpiry = useStorage('aggregator-token-expiry', '')
     const aggregator = useStorage('aggregator', '')
+    const vendorDokanToken = useStorage('vendor-dokan-token', '')
+    const vendorDokanTokenExpiry = useStorage('vendor-dokan-token-expiry', 0)
     const aggregatorEverLoggedIn = ref(false)
     const getAggregatorToken = computed(()=> aggregatorToken.value)
-    const IsAuthenticationError = ref<IsAuthenticationError>({
+    const getDokanToken = computed(()=> vendorDokanToken.value)
+    const isAuthenticationError = ref<IsAuthenticationError>({
         isError: false,
         message: '',
         type: 'success'
@@ -64,7 +83,8 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
     const aggregatorTokenValid = computed(()=>{
         const expiry = moment.unix(Number(aggregatorTokenExpiry.value)).utc()
         const now = moment().utc()
-        const isValid = aggregatorToken.value && expiry.isAfter(now)
+        const wpExpiry = moment.unix(Number(vendorDokanTokenExpiry.value)).utc()
+        const isValid = aggregatorToken.value && expiry.isAfter(now) && vendorDokanToken.value && wpExpiry.isAfter(now)
         if(!isValid){
             logout()
         }
@@ -132,38 +152,141 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
                 console.log('failed to login aggregator', response)
                 return {
                     result: 'fail',
-                    message: 'Failed to login, please try again'
+                    message: 'Wrong credentials, please try again'
                 }
             }
             else{
                 const resp = await response.json()
-                setToken(resp.access_token)
+                setToken(resp)
                 aggregatorEverLoggedIn.value = true
-                return await decodeToken(resp.access_token)
+                return await decodeToken(resp.access_token, resp.dokan_token)
             }
         }
         catch (error) {
+            console.log("Error login Vendor:", error)
             return {
                 result: 'fail',
-                message: 'Failed to login, please try again'
+                message: 'An error has occurred, please try again'
             }
         }
     }
 
-    async function  decodeToken (token: string){
+    async function forgotPassword(email: string) {
+        console.log('forgot password', email)
+        try {
+            const response = await fetch(`${BASE_URL}/auth/aggregator/forgot-password`, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email
+                })
+            })
+            if(!response.ok){
+                return {
+                    result: 'fail',
+                    message: 'Could not reset password, please try again'
+                }
+            }
+            const res = await response.json()
+            return {
+                result: 'success',
+                message: res.message
+            }
+        }
+        catch(error){
+            return {
+                result: 'fail',
+                message: 'Could not reset password, please try again'
+            }
+        }
+    }
+
+    async function resetPassword(resetPasswordPayload:  ResetPasswordPayload ){
+        try {
+            const response = await fetch(`${BASE_URL}/auth/aggregator/reset-password`, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(resetPasswordPayload)
+
+            })
+
+            if(!response.ok){
+                return {
+                    result: 'fail',
+                    message: 'Could not reset password, please try again'
+                }
+            }
+            const res = await response.json()
+            return {
+                result: 'success',
+                message: res.message
+            }
+        }
+        catch(error){
+            return {
+                result: 'fail',
+                message: 'Could not reset password, please try again'
+            }
+        }
+    }
+
+    async function changeDokanVendorStatus(payload: DokanVendorStatus){
+        const adminAuthStore = useAdminAuthStore()
+        console.log('changing status', payload)
+        try{
+            const response = await fetch(`${BASE_URL}/auth/aggregator/change-dokan-vendor-status`, {
+                method: 'POST',
+                // mode: 'cors',
+                headers: {
+                    'Authorization': `Bearer ${adminAuthStore.getToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    aggregator_id: payload.aggregatorId,
+                    enabled_status: payload.status,
+                    wp_token: adminAuthStore.adminWordpressToken
+                })
+            })
+            console.log('changing ststua response', response)
+            if(!response.ok){
+                return {
+                    result: 'fail',
+                    message: 'Could not change status, please try again'
+                }
+            }
+            const res = await response.json()
+            return {
+                result: res.result,
+                message: res.message
+            }
+        }
+        catch(error){
+            return
+        }
+    }
+
+    async function  decodeToken (token: string, wp_token: string){
         const decode: AggregatorToken = jwtDecode(token)
+        const wpDecode: VendorWordPressToken = jwtDecode(wp_token)
         aggregatorTokenExpiry.value = decode.exp
         setAggregatorData ({
-            fullName: decode.sub,
+            firstName: decode.sub,
             email: decode.email,
             userId: decode.user_id,
+            dokanId: decode.dokan_id
         })
+        aggregatorTokenExpiry.value = decode.exp
+        vendorDokanTokenExpiry.value = wpDecode.exp
         return {
             result: 'success',
             message: 'Successfully logged in'
         }
-
-
     }
 
     function setToken(token: {access_token: string, dokan_token: string}){
@@ -200,7 +323,8 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
     }
 
     const setIsAuthenticationError = (value: IsAuthenticationError) => {
-        IsAuthenticationError.value = {...value}
+        console.log('setting error', value)
+        isAuthenticationError.value = {...value}
     }
 
 
@@ -216,8 +340,12 @@ export const useAggregatorAuthStore = defineStore('aggregatorAuthStore', ()=>{
         loginAggregator,
         getAggregatorInfo,
         setIsAuthenticationError,
-        IsAuthenticationError,
-        getAggregatorToken
+        isAuthenticationError,
+        getAggregatorToken,
+        forgotPassword,
+        resetPassword,
+        getDokanToken,
+        changeDokanVendorStatus
     }
 
 })
