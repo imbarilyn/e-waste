@@ -4,11 +4,15 @@ import SidebarComponent from "@/components/admin/SidebarComponent.vue";
 import {useAdminStore} from "@/stores/adminStore.ts";
 import {useRouter} from "vue-router";
 import {useAdminTabStore} from "@/stores/adminTabStore.ts";
+import ToastContainer from "@/components/commonComponent/toast/ToastContainer.vue";
+import ToastAlert from "@/components/commonComponent/toast/ToastAlert.vue";
+import {useNotificationsStore} from "@/stores";
 
 
 
 const adminStore = useAdminStore()
 const adminTabStore = useAdminTabStore()
+const notificationStore = useNotificationsStore()
 const router = useRouter()
 
 const collapseSidebar = ref(false)
@@ -75,6 +79,19 @@ const addAggregatorHandler = ()=>{
     </div>
 
   </div>
+  <teleport to="body">
+    <ToastContainer v-if="notificationStore.hasNotifications">
+      <template v-for="notification in notificationStore.getNotifications" :key="notification.id">
+        <ToastAlert
+            v-if="notification.id && notification.isShown"
+            :id="notification.id"
+            :is-shown="notification.isShown"
+            :message="notification.message"
+            :type="notification.type"
+        />
+      </template>
+    </ToastContainer>
+  </teleport>
 </template>
 
 <style scoped>
