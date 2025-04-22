@@ -8,7 +8,7 @@ import 'datatables.net-buttons/js/buttons.html5.js'
 import 'datatables.net-buttons/js/buttons.print.js'
 import DialogModal from "@/components/commonComponent/DialogModal.vue";
 import {ref, reactive} from "vue";
-import {useAdminAuthStore, useAdminStore} from "@/stores";
+import {type Product, useAdminAuthStore, useAdminStore} from "@/stores";
 import moment from 'moment'
 import {showAlert} from "@/modules/sweetAlert.ts";
 
@@ -21,12 +21,12 @@ interface Communication {
   body: string,
   status: string,
   created_at: string,
-  full_name: string,
+  first_name: string,
+  last_name: string,
   email:string
 }
 
 const communicationData = ref<Communication | null>(null)
-const material_table_el = ref<JQuery<HTMLElement> | null>(null)
 // const  BASE_URL = 'http://localhost:3000'
 const BASE_URL = import.meta.env.VITE_BASE_URL
 const openDialog = ref({
@@ -87,7 +87,20 @@ const handleResend = ()=>{
 
 
 const columns = [
-  { data: 'full_name', title: 'Aggregator name' },
+  {data: null, title: '',
+    render: (data: string, type: string, row: Product) =>{
+
+      return `<div class="flex">
+                <input
+                type="checkbox" class="shrink-0 w-4 h-4 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="checkbox">
+            </div>`
+    }
+  },
+  { data: null, title: 'Aggregator name',
+    render:(data:string, type:string, row: Communication)=>{
+      return `${row.first_name} ${row.last_name}`
+    }
+  },
   {data: 'email', title: 'Email'},
   { data: 'head', title: 'Email head' },
   { data: 'body', title: 'Email body',
@@ -190,6 +203,12 @@ $(document).ready(function() {
         }
       }
     ],
+    columnDefs: [
+      {
+        targets: '_all', className: 'dt-body-left dt-head-left'
+      }
+
+    ],
     // for page length
     layout: {
       // topStart: null,
@@ -201,7 +220,7 @@ $(document).ready(function() {
     },
     scrollX: true,
     paging: true,
-    select: true,
+    // select: true,
     responsive: true
   })
 
@@ -220,7 +239,7 @@ $(document).ready(function() {
 
   <div>
     <div class="py-4">
-      <p class="md:text-3xl text-2xl ">Communication</p>
+      <p class="md:text-2xl text-lg font-semibold">Communication</p>
     </div>
     <div class="min-w-80  p-8 shadow-2xl rounded-2xl border border-1 ">
       <div>
@@ -249,7 +268,7 @@ $(document).ready(function() {
         </template>
         <template #body>
           <div class="space-y-2">
-            <p class="text-center text-normal font-semibold">Resending aggregator <span class="text-main-500">{{communicationData?.full_name}}</span> an email</p>
+            <p class="text-center text-normal font-semibold">Resending aggregator <span class="text-main-500">{{communicationData?.first_name}}</span> an email</p>
             <div class="">
               <p>Are you sure you want to resend email?</p>
 <!--              <p>Once deleted cannot be recovered</p>-->
