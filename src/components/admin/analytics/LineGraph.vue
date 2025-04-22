@@ -55,7 +55,7 @@ const salesTab = [
   }
 ] as SalesTab[]
 
-interface LineGraph{
+interface LineGraph {
   labels: string[],
   datasets: [
     {
