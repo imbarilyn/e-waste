@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import {computed, reactive, ref, watch} from "vue";
 import {useField} from "vee-validate";
 import { useAdminAuthStore } from '@/stores/adminAuthStore'
+import NotificationBanner from "@/components/commonComponent/NotificationBanner.vue";
 
 const router = useRouter()
 const adminAuthStore = useAdminAuthStore()
@@ -212,6 +213,12 @@ const createAdminHandler = () => {
 
 <template>
   <div class="h-full w-full grid grid-cols-12 bg-main-300 md:bg-white">
+    <NotificationBanner
+        :message="adminAuthStore.isAuthenticationError.message"
+        :type="adminAuthStore.isAuthenticationError.type"
+        :is-open="adminAuthStore.isAuthenticationError.isError"
+        @closeNotificationBanner="closeBanner"
+    />
 
     <div
         class="bg-main-300 sticky top-0    md:rounded-tr-2xl md:rounded-br-2xl  md:h-screen flex  items-center md:justify-center md:col-span-6 col-span-12">
