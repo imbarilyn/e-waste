@@ -3,6 +3,28 @@
 import {ref, reactive, onMounted} from "vue";
 import type {Ref} from 'vue'
 import {Chart} from "chart.js/auto";
+import SalesTab from "@/components/admin/analytics/SalesTab.vue";
+import moment from "moment/moment";
+import {useAdminStore} from "@/stores";
+import {resolveObjectKey} from "chart.js/helpers";
+export interface SalesTab {
+  label: string
+  position: number
+  isActive: boolean
+}
+
+interface Totals {
+  [date: string]: {
+    sales: number;
+    orders: number;
+    items: number;
+    tax: string;
+    shipping: string;
+    discount: string;
+    customers: number;
+  };
+}
+
 const refLineGraph: Ref<HTMLCanvasElement | null> = ref<HTMLCanvasElement | null>(null)
 const lineGraphInstance: Ref<Chart<'line', number[], string> | null> = ref(null)
 
