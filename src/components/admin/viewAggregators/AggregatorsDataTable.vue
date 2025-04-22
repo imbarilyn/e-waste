@@ -42,18 +42,57 @@ const exceptedColumns = Array.from({ length: columns.length-1}, (v, k) => k)
 $(document).ready(function() {
   material_table_el.value = $('#myTable');
 
-  material_table_el.value?.DataTable({
+  const table = $('#myTable').DataTable({
     columns: columns,
-    ajax: {
-      url: `${BASE_URL}/admin/get-aggregators/${adminAuthStore.getAdminInfo()?.userId}`,
-      dataSrc: (json) => {
-        console.log('data', json)
-        return json;
-      }
+    processing: true,
+    serverSide: true,
+    pageLength: 10,
+
+    // ajax: {
+    //   url: `${BASE_URL}/admin/get-aggregators/${adminAuthStore.getAdminInfo()?.userId}`,
+    //   dataSrc: (json) => {
+    //     console.log('data', json)
+    //     return json;
+    //   }
+    // },
+    ajax: function(data, callback,  settings){
+      const ajaxData = data as  DataTableAjaxData
+      let searchValue = ajaxData.search.value
+      let page = Math.floor(settings._iDisplayStart / settings._isDisplayLength) + 1
+      $.ajax({
+        url: `${BASE_URL}/admin/get-aggregators/${adminAuthStore.getAdminInfo()?.userId}`,
+        data: {
+          per_page: settings._isDisplayLength,
+          page: page,
+          search: searchValue
+        },
+        success: function(response, textStatus){
+          console.log(response)
+          callback({
+            draw: ajaxData.draw,
+            recordsTotal: response.total,
+            recordsFiltered: response.total,
+            data: response.response
+          })
+        },
+        error: function(response, textStatus){
+          callback({
+            draw: ajaxData.draw,
+            recordsTotal: 0,
+            recordsFiltered: 0,
+            data: [],
+            error: 'Failed to load data, kindly refresh page'
+
+          })
+        }
+      },
+      )
+
     },
     columnDefs: [
       {
-        targets: '_all', className: 'dt-body-left dt-head-left'
+        targets: '_all',
+        className: 'dt-body-left dt-head-left'
       }
 
     ],
