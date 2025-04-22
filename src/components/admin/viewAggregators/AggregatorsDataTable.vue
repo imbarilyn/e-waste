@@ -281,9 +281,17 @@ $(document).ready(function() {
         </table>
       </div>
     </div>
+    <div class="absolute flex justify-center items-center inset-0 bg-transparent backdrop-blur bg-opacity-90 z-50" v-if="isLoading">
+      <span class="loading loading-spinner text-main-500 loading-xl"></span>
+    </div>
+
   </div>
 </template>
 
 <style scoped>
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+}
 
 </style>
