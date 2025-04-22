@@ -2,6 +2,10 @@
 
 
 import {useRouter} from "vue-router";
+import {computed, reactive, ref, watch} from "vue";
+import {useField} from "vee-validate";
+import {showAlert} from "@/modules/sweetAlert.ts";
+import {useAggregatorAuthStore} from "@/stores";
 
 const router = useRouter()
 const aggregatorAuthStore = useAggregatorAuthStore()
@@ -150,6 +154,10 @@ const forgotPasswordHandler = () => {
                   <div>
                     <label class="label font-semibold text-main-800" for="email">Email address</label>
                     <input
+                        v-model="forgotPassword.email"
+                        :class="{ 'input border-1   focus:border-rose-500 focus:ring focus:ring-rose-500 focus:ring-offset-2  input-bordered border-rose-500': emailMeta.validated && !emailMeta.valid,
+
+                        }"
 
                         id="email"
                         class="input  input-bordered  border-1 border-main-500  focus:border-main-500 focus:ring focus:ring-main-500 focus:ring-offset-2  w-full text-sm"
@@ -157,6 +165,7 @@ const forgotPasswordHandler = () => {
                         required
                         type="text"
                     />
+                    <small v-if="emailMeta.validated && !emailMeta.valid" class="text-rose-500 text-sm">{{emailErrorMessage}}</small>
 
                   </div>
 
